@@ -333,3 +333,7 @@ Decisions made where the spec was silent, plus flags for content or setup that n
 - The folder of supplied pictures moved from `images/` into `public/images/`, so nothing outside `src` and `public` holds pictures except the design references. `scripts/seed-assets.ts` reads them from there. **These are the full size originals (about 150 MB) and every file in `public` is deployed and reachable by its address.** The client logos and the testimonial portraits are in there, and are meant to stay unpublished until Idyllic approves them. Before launch, resize the originals (or move the ones the site does not use out of `public`).
 - Removed: `reference/phase1-draft` (the superseded first draft of the schema and config, now in `src`), `src/lib/supabase/browser.ts` (a browser client nothing used), two empty placeholder files, and the generated TypeScript build cache.
 - Kept on purpose: `reference/` (third party design screenshots, so not placed in `public`), `fonts/` (the supplied font files, listed in CLAUDE.md), `design/`, `supabase/sql`, `scripts`, `.github`, and the project documents.
+
+## Vercel
+
+- **No `vercel.json`.** A single `services` entry with a catch-all rewrite was tried and removed: it sent `/_next/image` to the app as an ordinary page, so every optimised picture returned 404 (the raw files in `public` still loaded). A plain Next.js project needs no `vercel.json`; Vercel detects it.
