@@ -1,0 +1,35 @@
+import type { Metadata } from "next";
+import Image from "next/image";
+import { Container } from "@/components/corporate/container";
+import { CtaBand } from "@/components/corporate/cta-band";
+import { PageHero } from "@/components/corporate/page-hero";
+import { industries, industriesIntro } from "@/content/pages";
+import { getSiteContent } from "@/db/queries/public";
+import { pageMetadata } from "@/lib/seo";
+
+export const metadata: Metadata = pageMetadata({ title: industriesIntro.title, description: industries[0]?.body, path: "/industries" });
+
+export default async function IndustriesPage() {
+  const content = await getSiteContent();
+  return (
+    <>
+      <PageHero title={industriesIntro.title} />
+      <Container as="section" className="pb-8">
+        <ul className="grid gap-x-6 gap-y-14 md:grid-cols-2">
+          {industries.map((i, index) => (
+            <li key={i.id} className={`reveal flex flex-col gap-5 ${index % 2 === 1 ? "md:mt-20" : ""}`}>
+              <div className="relative aspect-[4/3] overflow-hidden rounded-container bg-sunken">
+                <Image src={i.image.src} alt={i.image.alt} fill sizes="(min-width: 768px) 38rem, 100vw" className="object-cover" />
+              </div>
+              <div className="flex flex-col gap-2">
+                <h2 className="text-3xl font-medium sm:text-4xl">{i.title}</h2>
+                <p className="max-w-[56ch] text-lg leading-relaxed text-ink-muted">{i.body}</p>
+              </div>
+            </li>
+          ))}
+        </ul>
+      </Container>
+      <CtaBand contact={content.contact} />
+    </>
+  );
+}

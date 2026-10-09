@@ -1,0 +1,600 @@
+@import "tailwindcss";
+
+/*
+ * Design tokens. Derived from the logo (blue #003E9D, yellow #F7C914, red #DF2526) and the
+ * brand sky blue #A2D2FF. Documented in design/tokens.md. Used by the public site and admin.
+ * Light and dark are both defined. Dark follows the system unless data-theme is set.
+ * Contrast pairs were checked: text and muted text pass 4.5:1, input borders pass 3:1.
+ */
+:root {
+  color-scheme: light;
+
+  /* Surfaces */
+  --canvas: #eff4fa;
+  --surface: #fcfdff;
+  --sunken: #e4ecf6;
+
+  /* Text */
+  --ink: #0b1426;
+  --ink-muted: #4a5b75;
+
+  /* Lines */
+  --line: #d5dfec;
+  --line-strong: #6f7f99; /* input borders, 3:1 against surface */
+
+  /* Brand */
+  --primary: #a2d2ff; /* brand sky: tints, highlights, selection */
+  --on-primary: #0b1426;
+  --brand: #003e9d; /* logo blue */
+
+  /* Interactive: primary action, links, focus ring */
+  --action: #003e9d;
+  --action-hover: #002f78;
+  --on-action: #fcfdff;
+
+  /* CTA (Book on WhatsApp and the main call to action on public pages). Logo yellow. */
+  --accent: #f7c914;
+  --accent-hover: #e3b700;
+  --on-accent: #0b1426;
+
+  /* Status */
+  --success: #1e7a4c;
+  --success-soft: #e3f3ea;
+  --error: #c4161c; /* darker than the logo red so text passes contrast */
+  --error-soft: #fbe6e6;
+
+  /* Footer: always dark, in light and dark mode alike */
+  --footer: #0b1426;
+  --on-footer: #eef3fb;
+  --on-footer-muted: #9fb0c9;
+  --footer-line: #22314d;
+
+  /* Shape. Controls are pills, cards 16, inputs 12, large containers 28. */
+  --r-input: 12px;
+  --r-card: 16px;
+  --r-container: 28px;
+
+  /* Motion */
+  --ease-out-strong: cubic-bezier(0.23, 1, 0.32, 1);
+  --ease-in-out-strong: cubic-bezier(0.77, 0, 0.175, 1);
+  --ease-drawer: cubic-bezier(0.32, 0.72, 0, 1);
+
+  --elev-raised: 0 1px 2px rgb(11 20 38 / 0.06), 0 8px 24px rgb(11 20 38 / 0.06);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    color-scheme: dark;
+    --canvas: #0a1220;
+    --surface: #111b2e;
+    --sunken: #0d1626;
+    --ink: #e8eef8;
+    --ink-muted: #9aabc4;
+    --line: #26344f;
+    --line-strong: #5a6c8c;
+    --action: #a2d2ff;
+    --action-hover: #c4e1ff;
+    --on-action: #0a1220;
+    --success: #5cc98f;
+    --success-soft: #12301f;
+    --error: #ff8a8a;
+    --error-soft: #3a1518;
+    --elev-raised: 0 1px 2px rgb(0 0 0 / 0.4), 0 8px 24px rgb(0 0 0 / 0.35);
+  }
+}
+
+:root[data-theme="dark"] {
+  color-scheme: dark;
+  --canvas: #0a1220;
+  --surface: #111b2e;
+  --sunken: #0d1626;
+  --ink: #e8eef8;
+  --ink-muted: #9aabc4;
+  --line: #26344f;
+  --line-strong: #5a6c8c;
+  --action: #a2d2ff;
+  --action-hover: #c4e1ff;
+  --on-action: #0a1220;
+  --success: #5cc98f;
+  --success-soft: #12301f;
+  --error: #ff8a8a;
+  --error-soft: #3a1518;
+  --elev-raised: 0 1px 2px rgb(0 0 0 / 0.4), 0 8px 24px rgb(0 0 0 / 0.35);
+}
+
+@theme inline {
+  --color-canvas: var(--canvas);
+  --color-surface: var(--surface);
+  --color-sunken: var(--sunken);
+  --color-ink: var(--ink);
+  --color-ink-muted: var(--ink-muted);
+  --color-line: var(--line);
+  --color-line-strong: var(--line-strong);
+  --color-primary: var(--primary);
+  --color-on-primary: var(--on-primary);
+  --color-brand: var(--brand);
+  --color-action: var(--action);
+  --color-action-hover: var(--action-hover);
+  --color-on-action: var(--on-action);
+  --color-accent: var(--accent);
+  --color-accent-hover: var(--accent-hover);
+  --color-on-accent: var(--on-accent);
+  --color-success: var(--success);
+  --color-success-soft: var(--success-soft);
+  --color-error: var(--error);
+  --color-error-soft: var(--error-soft);
+  --color-footer: var(--footer);
+  --color-on-footer: var(--on-footer);
+  --color-on-footer-muted: var(--on-footer-muted);
+  --color-footer-line: var(--footer-line);
+
+  --font-heading: var(--nf-heading), ui-sans-serif, system-ui, sans-serif;
+  --font-sans: var(--nf-body), ui-sans-serif, system-ui, sans-serif;
+
+  --radius-input: var(--r-input);
+  --radius-card: var(--r-card);
+  --radius-container: var(--r-container);
+
+  --shadow-raised: var(--elev-raised);
+}
+
+@layer base {
+  html {
+    background: var(--canvas);
+    -webkit-text-size-adjust: 100%;
+  }
+
+  body {
+    background: var(--canvas);
+    color: var(--ink);
+    font-family: var(--nf-body), ui-sans-serif, system-ui, sans-serif;
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  h1,
+  h2,
+  h3,
+  h4 {
+    font-family: var(--nf-heading), ui-sans-serif, system-ui, sans-serif;
+    letter-spacing: -0.02em;
+    line-height: 1.1;
+    text-wrap: balance;
+  }
+
+  /* Browser surfaces themed from the palette */
+  ::selection {
+    background: var(--primary);
+    color: var(--on-primary);
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--action);
+    outline-offset: 2px;
+  }
+
+  * {
+    scrollbar-color: var(--line-strong) transparent;
+  }
+
+  input,
+  button,
+  select,
+  textarea {
+    font: inherit;
+  }
+
+  input {
+    caret-color: var(--action);
+  }
+
+  table {
+    font-variant-numeric: tabular-nums;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    scroll-behavior: auto !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* Dialog motion: a short ease-out fade. Reduced motion collapses it. */
+@keyframes fade-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+.dialog-overlay[data-state="open"] {
+  animation: fade-in 150ms var(--ease-out-strong);
+}
+.dialog-overlay[data-state="closed"] {
+  animation: fade-in 100ms var(--ease-out-strong) reverse;
+}
+.dialog-content[data-state="open"] {
+  animation: fade-in 180ms var(--ease-out-strong);
+}
+.dialog-content[data-state="closed"] {
+  animation: fade-in 100ms var(--ease-out-strong) reverse;
+}
+
+/* Rendered Markdown in the post preview. Plain and readable, in the project's own type. */
+.prose-admin > * + * {
+  margin-top: 1rem;
+}
+.prose-admin h1,
+.prose-admin h2,
+.prose-admin h3,
+.prose-admin h4 {
+  margin-top: 1.75rem;
+}
+.prose-admin h1 {
+  font-size: 1.875rem;
+}
+.prose-admin h2 {
+  font-size: 1.5rem;
+}
+.prose-admin h3 {
+  font-size: 1.25rem;
+}
+.prose-admin ul {
+  list-style: disc;
+  padding-left: 1.5rem;
+}
+.prose-admin ol {
+  list-style: decimal;
+  padding-left: 1.5rem;
+}
+.prose-admin a {
+  color: var(--action);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+.prose-admin blockquote {
+  border-left: 1px solid var(--line-strong);
+  padding-left: 1rem;
+  color: var(--ink-muted);
+}
+.prose-admin img {
+  max-width: 100%;
+  height: auto;
+  border-radius: var(--r-card);
+}
+.prose-admin code {
+  background: var(--sunken);
+  border-radius: 6px;
+  padding: 0.1rem 0.35rem;
+  font-size: 0.9em;
+}
+.prose-admin pre {
+  background: var(--sunken);
+  border-radius: var(--r-input);
+  padding: 1rem;
+  overflow-x: auto;
+}
+.prose-admin pre code {
+  background: none;
+  padding: 0;
+}
+.prose-admin table {
+  width: 100%;
+  border-collapse: collapse;
+}
+.prose-admin th,
+.prose-admin td {
+  border-bottom: 1px solid var(--line);
+  padding: 0.5rem 0.75rem;
+  text-align: left;
+}
+
+/* Rich text editor surface. The content itself uses .prose-admin above. */
+.ProseMirror:focus {
+  outline: none;
+}
+.ProseMirror img.ProseMirror-selectednode {
+  outline: 2px solid var(--action);
+  outline-offset: 2px;
+}
+.ProseMirror > * + * {
+  margin-top: 1rem;
+}
+.ProseMirror h2,
+.ProseMirror h3 {
+  margin-top: 1.75rem;
+}
+.ProseMirror h2 {
+  font-size: 1.5rem;
+}
+.ProseMirror h3 {
+  font-size: 1.25rem;
+}
+
+/* Date picker: opens from its trigger, and the month slides in from the side you navigated to. */
+@keyframes picker-in {
+  from {
+    opacity: 0;
+    transform: scale(0.97);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+@keyframes picker-slide {
+  from {
+    opacity: 0;
+    transform: translateX(calc(var(--dir, 1) * 14px));
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+.picker-content {
+  transform-origin: var(--radix-popover-content-transform-origin);
+}
+.picker-content[data-state="open"] {
+  animation: picker-in 160ms var(--ease-out-strong);
+}
+.picker-content[data-state="closed"] {
+  animation: picker-in 100ms var(--ease-out-strong) reverse;
+}
+.picker-slide {
+  animation: picker-slide 220ms var(--ease-out-strong);
+}
+
+/* Public site motion. One entrance for the hero, and sections that ease in as they scroll into view
+   (only where the browser supports scroll driven animation). Reduced motion removes both. */
+@keyframes rise {
+  from {
+    opacity: 0;
+    transform: translateY(16px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+.hero-rise {
+  animation: rise 700ms var(--ease-out-strong) both;
+  animation-delay: calc(var(--i, 0) * 90ms);
+}
+/* Animate on scroll. Blocks marked .reveal ease up into place as they enter the screen. The ScrollReveal
+   component (src/components/scroll-reveal.tsx) sets data-reveal: "hidden" below the fold, "shown" once seen,
+   and removes it when the move has finished so the block's own hover transitions are untouched. With no
+   script, or reduced motion, nothing is ever hidden. */
+.reveal {
+  /* The two numbers to adjust if the motion needs to be quicker or slower. */
+  --reveal-duration: 1100ms;
+  --reveal-ease: cubic-bezier(0.25, 0.8, 0.25, 1);
+}
+.reveal[data-reveal="hidden"] {
+  opacity: 0;
+  transform: translateY(40px);
+  will-change: opacity, transform;
+}
+.reveal[data-reveal="hidden"][data-reveal-from="fade"] {
+  transform: none;
+}
+.reveal[data-reveal="hidden"][data-reveal-from="scale"] {
+  transform: scale(0.96);
+}
+.reveal[data-reveal="hidden"][data-reveal-from="left"] {
+  transform: translateX(-40px);
+}
+.reveal[data-reveal="hidden"][data-reveal-from="right"] {
+  transform: translateX(40px);
+}
+.reveal[data-reveal="shown"] {
+  will-change: opacity, transform;
+  transition:
+    opacity calc(var(--reveal-duration) * 0.8) ease-out var(--reveal-delay, 0ms),
+    transform var(--reveal-duration) var(--reveal-ease) var(--reveal-delay, 0ms);
+}
+@media print {
+  .reveal[data-reveal] {
+    opacity: 1;
+    transform: none;
+  }
+}
+@keyframes marquee {
+  to {
+    transform: translateX(-50%);
+  }
+}
+.marquee-track {
+  animation: marquee 45s linear infinite;
+}
+.marquee:hover .marquee-track,
+.marquee:focus-within .marquee-track {
+  animation-play-state: paused;
+}
+@media (prefers-reduced-motion: reduce) {
+  .marquee-track {
+    animation: none;
+  }
+}
+
+/* Post and product text on the public site. */
+.prose-public {
+  font-size: 1.0625rem;
+  line-height: 1.75;
+  max-width: 68ch;
+}
+.prose-public > * + * {
+  margin-top: 1.25rem;
+}
+.prose-public h2 {
+  font-size: 1.75rem;
+  margin-top: 2.5rem;
+}
+.prose-public h3 {
+  font-size: 1.375rem;
+  margin-top: 2rem;
+}
+.prose-public ul {
+  list-style: disc;
+  padding-left: 1.5rem;
+}
+.prose-public ol {
+  list-style: decimal;
+  padding-left: 1.5rem;
+}
+.prose-public li + li {
+  margin-top: 0.4rem;
+}
+.prose-public a {
+  color: var(--action);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+.prose-public blockquote {
+  border-left: 1px solid var(--line-strong);
+  padding-left: 1.25rem;
+  color: var(--ink-muted);
+  font-size: 1.25rem;
+}
+.prose-public img {
+  max-width: 100%;
+  height: auto;
+  border-radius: var(--r-card);
+}
+.prose-public hr {
+  border: 0;
+  border-top: 1px solid var(--line);
+  margin-block: 2.5rem;
+}
+
+.sheet-right[data-state="open"] {
+  animation: sheet-in 260ms var(--ease-out-strong);
+}
+.sheet-right[data-state="closed"] {
+  animation: sheet-in 160ms var(--ease-out-strong) reverse;
+}
+@keyframes sheet-in {
+  from {
+    transform: translateX(100%);
+  }
+  to {
+    transform: translateX(0);
+  }
+}
+
+/* FAQ answers open and close by height. Radix measures the content and exposes it as a variable. */
+.faq-content[data-state="open"] {
+  animation: faq-open 220ms var(--ease-out-strong);
+}
+.faq-content[data-state="closed"] {
+  animation: faq-close 160ms var(--ease-out-strong);
+}
+@keyframes faq-open {
+  from {
+    height: 0;
+    opacity: 0;
+  }
+  to {
+    height: var(--radix-accordion-content-height);
+    opacity: 1;
+  }
+}
+@keyframes faq-close {
+  from {
+    height: var(--radix-accordion-content-height);
+    opacity: 1;
+  }
+  to {
+    height: 0;
+    opacity: 0;
+  }
+}
+
+/* Energy Assistant. A full height bottom sheet on phones, a side drawer from 640px. Springless: a strong
+   ease-out in, a quicker ease-in-out out. Reduced motion keeps only a fade. */
+.assistant-sheet {
+  position: fixed;
+  z-index: 50;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  padding-top: env(safe-area-inset-top);
+  overscroll-behavior: contain;
+}
+@media (min-width: 640px) {
+  .assistant-sheet {
+    inset: 0 0 0 auto;
+    width: min(30rem, 100vw);
+    padding-top: 0;
+    border-radius: var(--r-container) 0 0 var(--r-container);
+  }
+}
+@keyframes assistant-in-y {
+  from { transform: translateY(100%); }
+  to { transform: translateY(0); }
+}
+@keyframes assistant-out-y {
+  to { transform: translateY(100%); }
+}
+@keyframes assistant-in-x {
+  from { transform: translateX(100%); }
+  to { transform: translateX(0); }
+}
+@keyframes assistant-out-x {
+  to { transform: translateX(100%); }
+}
+.assistant-sheet[data-state="open"] {
+  animation: assistant-in-y 320ms var(--ease-drawer);
+}
+.assistant-sheet[data-state="closed"] {
+  animation: assistant-out-y 200ms var(--ease-in-out-strong) forwards;
+}
+@media (min-width: 640px) {
+  .assistant-sheet[data-state="open"] {
+    animation-name: assistant-in-x;
+  }
+  .assistant-sheet[data-state="closed"] {
+    animation-name: assistant-out-x;
+  }
+}
+/* New lines of the conversation settle in. Options follow one after another, 40ms apart. */
+@keyframes assistant-rise {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+.assistant-line,
+.assistant-option {
+  animation: assistant-rise 240ms var(--ease-out-strong) both;
+}
+/* The launcher lifts clear of the phone booking bar when that bar is showing. */
+.assistant-launcher {
+  transition: transform 200ms var(--ease-out-strong), background-color 150ms;
+}
+@media (max-width: 1023.98px) {
+  html[data-booking-bar] .assistant-launcher {
+    transform: translateY(-4.5rem);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .assistant-sheet[data-state="open"],
+  .assistant-sheet[data-state="closed"] {
+    animation-name: fade-in;
+    animation-duration: 150ms;
+  }
+  .assistant-sheet[data-state="closed"] {
+    animation-direction: reverse;
+  }
+  .assistant-line,
+  .assistant-option {
+    animation: none;
+  }
+  .assistant-launcher {
+    transition: none;
+  }
+}
