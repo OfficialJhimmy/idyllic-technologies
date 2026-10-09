@@ -19,7 +19,7 @@ export const testimonialSeeds: readonly TestimonialSeed[] = [
 
 export type ClientSeed = { name: string; kind: "client" | "partner"; file: string; alt: string; sort: number };
 
-/** Logo files are the small images supplied in images/. Idyllic must provide vector or high resolution versions. */
+/** Logo files are the small images supplied in public/images/. Idyllic must provide vector or high resolution versions. */
 export const clientSeeds: readonly ClientSeed[] = [
   { name: "Ecobank", kind: "client", file: "ecobank.jpg", alt: "Ecobank Mobile logo", sort: 1 },
   { name: "Fidelity", kind: "client", file: "fidelity.jpg", alt: "Fidelity logo", sort: 2 },

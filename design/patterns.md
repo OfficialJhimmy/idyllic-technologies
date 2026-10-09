@@ -23,7 +23,7 @@ Images: GreenFlux, Heliora (two images, plus a zoomed hero), Biotric, Aerra, Gre
 
 | Pattern | Decision | Why |
 | --- | --- | --- |
-| Photography hero with big headline | Take, with Idyllic's real photography in `images/` | Spec section 9 says use supplied photography for heroes, industries and corporate responsibility |
+| Photography hero with big headline | Take, with Idyllic's real photography in `public/images/` | Spec section 9 says use supplied photography for heroes, industries and corporate responsibility |
 | Lime accent | Drop | Spec and CLAUDE.md forbid it. Idyllic's accent is the logo yellow, kept to the main call to action |
 | Pill buttons, arrow in a circle | Take | Matches spec. Pills for controls only, containers stay on the radius scale in `tokens.md` |
 | Pill navigation with separate CTA | Take, with the "Visit Marketplace" button as the CTA | Spec section 11 |
@@ -31,7 +31,7 @@ Images: GreenFlux, Heliora (two images, plus a zoomed hero), Biotric, Aerra, Gre
 | Hairline accordions | Take | Spec section 9. Use Radix Accordion for accessibility |
 | Logo strip | Take, once per page | The client logos are still needed as vectors. Real files only, no text stand-ins |
 | Service list with active row | Take for the six product categories | Gives the category list weight without six identical cards |
-| Testimonial portrait and thumbnails | Take only if Idyllic supplies portraits | `images/` has a few headshots. Testimonials stay `draft` until approved |
+| Testimonial portrait and thumbnails | Take only if Idyllic supplies portraits | `public/images/` has a few headshots. Testimonials stay `draft` until approved |
 | Dark footer with giant wordmark | Take | Spec section 9 |
 | Giant wordmark across the hero edge | Optional | Fine for one moment. Do not repeat it |
 | Prices on service cards (Creaenergy shows one) | Drop | Hard rule: no prices anywhere |

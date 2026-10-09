@@ -20,7 +20,7 @@ async function marker(key: string) {
 const setMarker = (key: string) => db.insert(s.siteValues).values({ key, value: true }).onConflictDoNothing();
 
 async function upload(file: string, alt: string, actor: string) {
-  let buffer = await readFile(path.join("images", file));
+  let buffer = await readFile(path.join("public", "images", file));
   // The originals are large camera files. Shrink them first, as staff would, to fit the 4 MB upload limit.
   if (buffer.length > 3 * 1024 * 1024) buffer = await sharp(buffer).rotate().resize({ width: 2400, height: 2400, fit: "inside", withoutEnlargement: true }).jpeg({ quality: 85 }).toBuffer();
   const result = await uploadImage(new File([new Uint8Array(buffer)], file), alt, actor);
