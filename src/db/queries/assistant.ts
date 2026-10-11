@@ -5,6 +5,7 @@ import { db, schema } from "@/db";
 import { withImages } from "@/db/queries/shop";
 import type { AssistantProduct } from "@/assistant/engine/types";
 import { formatSpecValue } from "@/lib/catalogue/spec-values";
+import { PUBLIC_CACHE_SECONDS } from "@/lib/cache";
 
 const s = schema;
 const MAX_PRODUCTS = 300;
@@ -63,7 +64,7 @@ const read = unstable_cache(
     });
   },
   ["assistant-products"],
-  { tags: ["catalogue"], revalidate: 3600 },
+  { tags: ["catalogue"], revalidate: PUBLIC_CACHE_SECONDS },
 );
 
 export const getAssistantProducts = (categorySlugs: string[]) => read([...new Set(categorySlugs)].sort().join(","));

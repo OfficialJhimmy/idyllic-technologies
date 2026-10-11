@@ -4,6 +4,7 @@ import { unstable_cache } from "next/cache";
 import { db, schema } from "@/db";
 import { formatSpecValue } from "@/lib/catalogue/spec-values";
 import { parseSiteValue, contactSchema, statsSchema, teamSchema, workProcessSchema } from "@/lib/site-values";
+import { PUBLIC_CACHE_SECONDS } from "@/lib/cache";
 
 /**
  * Everything the public site reads. Drizzle connects as the database owner, so row level security does
@@ -14,10 +15,9 @@ import { parseSiteValue, contactSchema, statsSchema, teamSchema, workProcessSche
  */
 
 const s = schema;
-const HOUR = 3600;
 
 function cached<A extends unknown[], R>(fn: (...args: A) => Promise<R>, key: string, tag: "catalogue" | "blog" | "content") {
-  return unstable_cache(fn, [key], { tags: [tag], revalidate: HOUR });
+  return unstable_cache(fn, [key], { tags: [tag], revalidate: PUBLIC_CACHE_SECONDS });
 }
 
 export type PublicImage = { storagePath: string; alt: string; width: number; height: number };

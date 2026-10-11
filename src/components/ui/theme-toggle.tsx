@@ -10,7 +10,7 @@ const options: { value: ThemePreference; label: string; Icon: typeof Sun }[] = [
   { value: "system", label: "System", Icon: Desktop },
 ];
 
-const useTheme = () => useSyncExternalStore(subscribeTheme, readTheme, (): ThemePreference => "system");
+const useTheme = () => useSyncExternalStore(subscribeTheme, readTheme, (): ThemePreference => "light");
 
 const press = "transition-[background-color,color,transform] duration-150 active:scale-[0.95]";
 

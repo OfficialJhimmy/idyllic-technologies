@@ -8,11 +8,9 @@ export const metadata: Metadata = {
 };
 
 export const viewport: Viewport = {
-  colorScheme: "light dark",
-  themeColor: [
-    { media: "(prefers-color-scheme: light)", color: "#eff4fa" },
-    { media: "(prefers-color-scheme: dark)", color: "#0a1220" },
-  ],
+  // Light is the default, so the browser is told the page is light too (form controls, scrollbars, address bar).
+  colorScheme: "light",
+  themeColor: "#eff4fa",
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {

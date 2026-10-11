@@ -5,6 +5,7 @@ import { db, schema } from "@/db";
 import { getPublicCategories, type ProductCard, type PublicCategory, type PublicImage } from "@/db/queries/public";
 import { formatSpecValue } from "@/lib/catalogue/spec-values";
 import type { FilterableSpec, Filters } from "@/lib/marketplace/filters";
+import { PUBLIC_CACHE_SECONDS } from "@/lib/cache";
 
 /**
  * Marketplace reads. Same rule as the corporate queries: Drizzle bypasses row level security, so every
@@ -14,10 +15,9 @@ import type { FilterableSpec, Filters } from "@/lib/marketplace/filters";
  */
 
 const s = schema;
-const HOUR = 3600;
 const imageCols = { storagePath: s.media.storagePath, alt: s.media.alt, width: s.media.width, height: s.media.height };
 const published = () => eq(s.products.status, "published");
-const cached = <A extends unknown[], R>(fn: (...a: A) => Promise<R>, key: string) => unstable_cache(fn, [key], { tags: ["catalogue"], revalidate: HOUR });
+const cached = <A extends unknown[], R>(fn: (...a: A) => Promise<R>, key: string) => unstable_cache(fn, [key], { tags: ["catalogue"], revalidate: PUBLIC_CACHE_SECONDS });
 
 const cardCols = { id: s.products.id, slug: s.products.slug, name: s.products.name, summary: s.products.summary, brandName: s.brands.name, categoryName: s.productCategories.name, categorySlug: s.productCategories.slug };
 

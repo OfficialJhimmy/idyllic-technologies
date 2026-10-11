@@ -3,7 +3,8 @@
 /*
  * Design tokens. Derived from the logo (blue #003E9D, yellow #F7C914, red #DF2526) and the
  * brand sky blue #A2D2FF. Documented in design/tokens.md. Used by the public site and admin.
- * Light and dark are both defined. Dark follows the system unless data-theme is set.
+ * Light and dark are both defined. Light is the default. Dark applies only when the visitor picks it
+ * (data-theme="dark") or picks "System" and their device is set to dark (data-theme="system").
  * Contrast pairs were checked: text and muted text pass 4.5:1, input borders pass 3:1.
  */
 :root {
@@ -63,7 +64,7 @@
 }
 
 @media (prefers-color-scheme: dark) {
-  :root:not([data-theme="light"]) {
+  :root[data-theme="system"] {
     color-scheme: dark;
     --canvas: #0a1220;
     --surface: #111b2e;

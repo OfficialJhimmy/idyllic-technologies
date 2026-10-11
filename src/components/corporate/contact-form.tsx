@@ -100,7 +100,7 @@ function ContactFormRound({ initialType, productSlug, productName, turnstileSite
         </label>
       </div>
 
-      {turnstileSiteKey ? <div className="cf-turnstile" data-sitekey={turnstileSiteKey} data-theme="auto" /> : null}
+      {turnstileSiteKey ? <div className="cf-turnstile" data-sitekey={turnstileSiteKey} data-theme="light" /> : null}
 
       {state.status === "error" ? <FormBanner tone="error">{state.message}</FormBanner> : null}
       <div>
