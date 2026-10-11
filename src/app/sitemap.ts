@@ -4,6 +4,9 @@ import { absoluteUrl } from "@/lib/seo";
 
 // Product pages are not listed here: they declare the shop host as their canonical address, and the
 // marketplace publishes its own sitemap. Blog posts and the main pages live on this host.
+// Built when asked for, so the deploy does not wait on the database.
+export const dynamic = "force-dynamic";
+
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const pages = ["/", "/about", "/industries", "/products", "/blog", "/faqs", "/contact"].map((path) => ({ url: absoluteUrl(path) }));
   let posts: MetadataRoute.Sitemap = [];

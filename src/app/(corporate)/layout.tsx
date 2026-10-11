@@ -9,6 +9,11 @@ import { getPublicCategories, getSiteContent } from "@/db/queries/public";
 import { organizationJsonLd, SITE_NAME, absoluteUrl, shopUrl } from "@/lib/seo";
 import type { Metadata } from "next";
 
+// Rendered when asked for, never at build time. Every page here reads the database, and a build must not depend on the
+// database being fast: when it was slow, six pages ran past the 60 second limit and the deploy failed. The reads are
+// cached for 60 seconds (src/lib/cache.ts), so a request still rarely waits on the database.
+export const dynamic = "force-dynamic";
+
 export async function generateMetadata(): Promise<Metadata> {
   return {
     metadataBase: new URL(absoluteUrl("/")),

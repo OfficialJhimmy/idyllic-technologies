@@ -4,6 +4,9 @@ import { shopAbsoluteUrl } from "@/lib/seo";
 
 // The marketplace's own sitemap, served at /sitemap.xml on the shop host. Search, compare and the
 // booking list are left out: they are personal or endless.
+// Built when asked for, so the deploy does not wait on the database.
+export const dynamic = "force-dynamic";
+
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   try {
     const d = await getShopSitemapData();
