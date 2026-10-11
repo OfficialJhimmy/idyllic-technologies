@@ -20,7 +20,7 @@ export function MediaLibrary({ items }: { items: Item[] }) {
     <div className="flex flex-col gap-10">
       <section aria-labelledby="upload-heading" className="flex max-w-xl flex-col gap-4">
         <h2 id="upload-heading" className="text-xl font-medium">
-          Upload an image
+          Upload images
         </h2>
         <ImageUploadForm onUploaded={() => router.refresh()} />
       </section>

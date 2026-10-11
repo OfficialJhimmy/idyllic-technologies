@@ -38,6 +38,7 @@ function PickerBody({ onOpenChange, onPick, multiple = false, disabledIds = [] }
   const [total, setTotal] = useState(0);
   const [page, setPage] = useState(1);
   const [selected, setSelected] = useState<MediaRef[]>([]);
+  const [uploadOpen, setUploadOpen] = useState(false);
   const [state, setState] = useState<"loading" | "ready" | "error">("loading");
   const [pending, startTransition] = useTransition();
   const timer = useRef<ReturnType<typeof setTimeout> | undefined>(undefined);
@@ -78,16 +79,27 @@ function PickerBody({ onOpenChange, onPick, multiple = false, disabledIds = [] }
   return (
     <>
       <div className="flex min-h-0 flex-1 flex-col gap-6 overflow-y-auto">
-        <details className="rounded-card border border-line p-4">
-          <summary className="cursor-pointer text-[0.9375rem] font-medium">Upload a new image</summary>
+        <details className="rounded-card border border-line p-4" open={uploadOpen} onToggle={(e) => setUploadOpen(e.currentTarget.open)}>
+          <summary className="cursor-pointer text-[0.9375rem] font-medium">{multiple ? "Upload new images" : "Upload a new image"}</summary>
           <div className="pt-4">
             <ImageUploadForm
-              onUploaded={(media) => {
-                setSelected((prev) => (multiple ? [...prev, media] : prev));
+              multiple={multiple}
+              onUploaded={(media, remaining) => {
+                // An uploaded image is added to the editor straight away. If some failed, the window stays open
+                // so they can be fixed and tried again, and the ones that worked are already chosen.
                 if (!multiple) {
-                  onPick([media]);
+                  onPick(media.slice(0, 1));
                   onOpenChange(false);
-                } else load(q, 1, false);
+                  return;
+                }
+                const chosen = [...selected.filter((s) => !media.some((m) => m.id === s.id)), ...media];
+                if (remaining === 0) {
+                  onPick(chosen);
+                  onOpenChange(false);
+                } else {
+                  setSelected(chosen);
+                  load(q, 1, false);
+                }
               }}
             />
           </div>
