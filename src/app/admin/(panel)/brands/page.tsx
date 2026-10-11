@@ -2,13 +2,18 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { buttonStyles } from "@/components/ui/button";
 import { PageHeader } from "@/components/ui/page-header";
+import { Pagination } from "@/components/ui/pagination";
+import { paginate, parsePage } from "@/lib/pagination";
 import { EmptyState } from "@/components/ui/states";
 import { listBrands } from "@/db/queries/catalogue";
 
 export const metadata: Metadata = { title: "Brands" };
 
-export default async function BrandsPage() {
-  const brands = await listBrands();
+const PAGE_SIZE = 20;
+
+export default async function BrandsPage({ searchParams }: { searchParams: Promise<{ page?: string }> }) {
+  const all = await listBrands();
+  const { rows: brands, page, pages } = paginate(all, parsePage((await searchParams).page), PAGE_SIZE);
   const create = (
     <Link href="/admin/brands/new" className={buttonStyles()}>
       New brand
@@ -18,7 +23,7 @@ export default async function BrandsPage() {
   return (
     <div className="flex max-w-3xl flex-col gap-8">
       <PageHeader title="Brands" description="The manufacturers whose products Idyllic distributes." actions={create} />
-      {brands.length === 0 ? (
+      {all.length === 0 ? (
         <EmptyState title="No brands yet" body="Add a brand before adding products, because every product belongs to one." action={create} />
       ) : (
         <ul className="divide-y divide-line rounded-card bg-surface">
@@ -32,6 +37,7 @@ export default async function BrandsPage() {
           ))}
         </ul>
       )}
+      <Pagination basePath="/admin/brands" page={page} pages={pages} />
     </div>
   );
 }

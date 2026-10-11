@@ -340,3 +340,21 @@ Decisions made where the spec was silent, plus flags for content or setup that n
 - **Testing on Vercel without a custom domain.** A `shop.` prefix cannot be put in front of a `vercel.app` name, so the marketplace host is also recognised by its exact address in `NEXT_PUBLIC_SHOP_URL`. Add two `vercel.app` names to the one project (for example `idyllic-technologies.vercel.app` and `idyllic-shop.vercel.app`) and set `NEXT_PUBLIC_SITE_URL` and `NEXT_PUBLIC_SHOP_URL` to them. Both are served by the same deployment, and the links between the sites follow those two settings.
 - **Stale product list on Vercel.** The admin showed 12 published UPS products and the public Products page showed 5, the ones published before a certain moment: the cached list had not been refreshed by the later publishes, and an hour long cache then kept it. The database was correct. The cause of the missed refresh could not be seen from here (no access to Vercel logs). The public read cache is now 60 seconds, so a missed refresh heals within a minute. If it recurs, check the Vercel function logs for the publish request in the admin.
 - **Intermittent 500 on Vercel (first request fails, the next works).** Cause: `DATABASE_URL` was the Session pooler (port 5432), which allows 15 connections in total, and each serverless copy of the app holds up to 3. **On Vercel `DATABASE_URL` must be the Transaction pooler (same host, port 6543).** Idle connections are now closed after 20 seconds and a connection attempt times out after 10.
+
+## Paging
+
+The rule: **numbered pages** where people browse, compare, bookmark or share a place in a list, or work down a table; **"See more"** where a short feed simply keeps adding to the same list.
+
+| Where | Kind | Size |
+| --- | --- | --- |
+| Corporate Products, Blog | Numbered | 12, 9 |
+| Marketplace category, brand, search | Numbered, filters kept | 12 |
+| Admin products (10, count on the left and pages on the right), posts, enquiries, media, brands, blog authors, tags, categories | Numbered | 10, 25, 25, 40, 20, 20, 20, 20 |
+| Corporate FAQs | See more (reveals the next 8 in place) | 8 |
+| Marketplace home, newest products | See more (loads the next 8 from the server) | 8 |
+| Media picker in the editors | See more (already so) | 24 |
+
+- Numbered pages are real links (`?page=3`), so they open in a new tab, can be shared, and search engines can follow them. The row shows the first and last page, the current page and its neighbours, and gaps, at most seven entries, so it fits a phone. The current page is marked `aria-current="page"` and the landmark is named "Pagination" (the footer already has one named "Pages"). Helpers are in `src/lib/pagination.ts` and are tested.
+- "See more" says how far along you are ("Showing 8 of 44 products"), announces it, moves focus to the first new item for keyboard users, never repeats an item, and goes away when everything is shown.
+- **Left unpaged on purpose:** the admin FAQs, testimonials and client logos (they are reordered as one list, so splitting them across pages would make reordering awkward, and they stay short), the six categories, the booking list (at most 20) and compare (at most 3), and the home page's three newest posts.
+- The words "See more questions" and "See more" are mine, not approved copy.

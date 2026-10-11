@@ -2,6 +2,8 @@
 
 import * as Accordion from "@radix-ui/react-accordion";
 import { Minus, Plus } from "@phosphor-icons/react";
+import { useEffect, useRef, useState } from "react";
+import { SeeMoreButton } from "@/components/ui/see-more-button";
 
 type Faq = { id: string; question: string; answer: string };
 
@@ -9,13 +11,25 @@ type Faq = { id: string; question: string; answer: string };
  * Hairline accordion. Radix gives it keyboard control, the right roles and focus handling. The answers
  * are plain text and are shown exactly as approved.
  */
-export function FaqAccordion({ faqs }: { faqs: Faq[] }) {
+export function FaqAccordion({ faqs, batch = 8 }: { faqs: Faq[]; batch?: number }) {
+  const [visible, setVisible] = useState(batch);
+  const root = useRef<HTMLDivElement>(null);
+  const focusAt = useRef<number | null>(null);
+
+  // After "See more", move focus to the first question that was added, so keyboard users carry on from there.
+  useEffect(() => {
+    if (focusAt.current === null) return;
+    root.current?.querySelectorAll<HTMLElement>("[data-faq-trigger]")[focusAt.current]?.focus();
+    focusAt.current = null;
+  }, [visible]);
+
   return (
+    <div ref={root} className="flex flex-col gap-10">
     <Accordion.Root type="single" collapsible className="border-t border-line">
-      {faqs.map((f) => (
+      {faqs.slice(0, visible).map((f) => (
         <Accordion.Item key={f.id} value={f.id} className="border-b border-line">
           <Accordion.Header className="m-0">
-            <Accordion.Trigger className="group flex min-h-20 w-full items-center justify-between gap-6 py-5 text-left font-heading text-xl font-medium sm:text-2xl">
+            <Accordion.Trigger data-faq-trigger className="group flex min-h-20 w-full items-center justify-between gap-6 py-5 text-left font-heading text-xl font-medium sm:text-2xl">
               {f.question}
               <span aria-hidden className="relative flex h-10 w-10 shrink-0 items-center justify-center rounded-full border border-line-strong transition-colors duration-150 group-hover:bg-sunken">
                 <Plus size={18} className="transition-[opacity,transform] duration-200 group-data-[state=open]:rotate-90 group-data-[state=open]:opacity-0" />
@@ -29,5 +43,18 @@ export function FaqAccordion({ faqs }: { faqs: Faq[] }) {
         </Accordion.Item>
       ))}
     </Accordion.Root>
+    {faqs.length > batch ? (
+      <SeeMoreButton
+        shown={Math.min(visible, faqs.length)}
+        total={faqs.length}
+        noun="questions"
+        label="See more questions"
+        onClick={() => {
+          focusAt.current = visible;
+          setVisible((v) => v + batch);
+        }}
+      />
+    ) : null}
+    </div>
   );
 }

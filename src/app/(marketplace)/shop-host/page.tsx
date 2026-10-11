@@ -4,9 +4,9 @@ import Link from "next/link";
 import { Container } from "@/components/corporate/container";
 import { MediaImage } from "@/components/corporate/media-image";
 import { SiteLink } from "@/components/corporate/shop-link";
-import { ShopProductCard } from "@/components/marketplace/shop-product-card";
 import { ShopSearch } from "@/components/marketplace/shop-search";
-import { getShopHome } from "@/db/queries/shop";
+import { NewestProducts } from "@/components/marketplace/newest-products";
+import { HOME_LATEST_PAGE, getLatestProducts, getShopHome } from "@/db/queries/shop";
 import { pageMetadata, siteUrl } from "@/lib/seo";
 
 export const metadata: Metadata = pageMetadata({ host: "shop", title: "Idyllic Technologies Marketplace", description: "Browse products by category or brand, compare them, and book on WhatsApp.", path: "/" });
@@ -18,7 +18,7 @@ const steps = [
 ] as const;
 
 export default async function ShopHomePage() {
-  const { categories, latest, brands } = await getShopHome();
+  const [{ categories, brands }, { rows: latest, total: latestTotal }] = await Promise.all([getShopHome(), getLatestProducts(0, HOME_LATEST_PAGE)]);
   return (
     <>
       <Container as="section" className="flex flex-col gap-8 pt-14 pb-12 sm:pt-20">
@@ -51,13 +51,7 @@ export default async function ShopHomePage() {
             <h2 className="text-3xl font-medium sm:text-4xl">Newest products</h2>
             <Link href="/search" className="inline-flex min-h-11 items-center font-medium underline underline-offset-4">Browse all</Link>
           </div>
-          <ul className="grid gap-x-6 gap-y-12 sm:grid-cols-2 lg:grid-cols-4">
-            {latest.map((p) => (
-              <li key={p.id} className="reveal">
-                <ShopProductCard product={p} />
-              </li>
-            ))}
-          </ul>
+          <NewestProducts initial={latest} total={latestTotal} />
         </Container>
       ) : (
         <Container as="section" className="pb-16">

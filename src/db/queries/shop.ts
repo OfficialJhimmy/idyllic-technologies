@@ -37,13 +37,23 @@ const orderBy = (sort: "newest" | "name") => (sort === "name" ? [asc(s.products.
 
 // --------------------------------------------------------------------- home
 
+export const HOME_LATEST_PAGE = 8;
+
+/** One batch of the newest published products, for the "See more" button on the marketplace home. */
+export const getLatestProducts = cached(async (offset: number, limit: number): Promise<{ rows: ProductCard[]; total: number }> => {
+  const [rows, [{ n } = { n: 0 }]] = await Promise.all([
+    db.select(cardCols).from(s.products).innerJoin(s.brands, eq(s.brands.id, s.products.brandId)).innerJoin(s.productCategories, eq(s.productCategories.id, s.products.categoryId)).where(published()).orderBy(desc(s.products.publishedAt), asc(s.products.name)).limit(limit).offset(offset),
+    db.select({ n: sql<number>`count(*)::int` }).from(s.products).where(published()),
+  ]);
+  return { rows: await withImages(rows), total: n };
+}, "shop-latest");
+
 export const getShopHome = cached(async () => {
-  const [categories, latest, brands] = await Promise.all([
+  const [categories, brands] = await Promise.all([
     getPublicCategories(),
-    db.select(cardCols).from(s.products).innerJoin(s.brands, eq(s.brands.id, s.products.brandId)).innerJoin(s.productCategories, eq(s.productCategories.id, s.products.categoryId)).where(published()).orderBy(desc(s.products.publishedAt)).limit(8),
     db.selectDistinct({ slug: s.brands.slug, name: s.brands.name, logoPath: s.media.storagePath, logoAlt: s.media.alt, logoWidth: s.media.width, logoHeight: s.media.height }).from(s.brands).innerJoin(s.products, and(eq(s.products.brandId, s.brands.id), published())).leftJoin(s.media, eq(s.media.id, s.brands.logoMediaId)).orderBy(asc(s.brands.name)),
   ]);
-  return { categories, latest: await withImages(latest), brands };
+  return { categories, brands };
 }, "shop-home");
 
 // ---------------------------------------------------------------- category
