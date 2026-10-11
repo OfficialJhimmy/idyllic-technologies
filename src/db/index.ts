@@ -1,6 +1,7 @@
 import "server-only";
 import { drizzle } from "drizzle-orm/postgres-js";
 import postgres from "postgres";
+import { serverlessConnectionUrl } from "./connection-url";
 import * as schema from "./schema";
 
 declare global {
@@ -13,7 +14,7 @@ function client() {
   // Supabase pooler (transaction mode) does not support prepared statements.
   // Serverless: many copies of the app run at once, so connections must not linger. Idle ones are closed after
   // 20 seconds, and a connection that cannot be made fails fast instead of hanging the page.
-  return postgres(url, { prepare: false, max: Number(process.env.DB_POOL_MAX) || 3, idle_timeout: 20, connect_timeout: 10 });
+  return postgres(serverlessConnectionUrl(url, Boolean(process.env.VERCEL)), { prepare: false, max: Number(process.env.DB_POOL_MAX) || 3, idle_timeout: 20, connect_timeout: 10 });
 }
 
 const sql = globalThis.__pg ?? client();
