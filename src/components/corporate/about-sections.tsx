@@ -1,6 +1,33 @@
 import Image from "next/image";
 import { Container } from "@/components/corporate/container";
-import { about, mission } from "@/content/pages";
+import { about, mission, story } from "@/content/pages";
+
+/** The full company story, with the tagline beside it. This is where "Read our full story" on the home page lands. */
+export function OurStory() {
+  const [lead, ...rest] = story.paragraphs;
+  return (
+    <Container as="section" id="our-story" className="scroll-mt-28 py-12 sm:py-20">
+      <div className="grid gap-10 lg:grid-cols-[minmax(0,5fr)_minmax(0,7fr)] lg:gap-20">
+        <div className="reveal flex flex-col gap-6 lg:sticky lg:top-32 lg:self-start">
+          <h2 className="text-4xl font-medium sm:text-5xl lg:text-6xl">{story.title}</h2>
+          <p className="font-heading text-2xl leading-snug font-medium sm:text-3xl">{story.tagline}</p>
+        </div>
+        <div className="flex flex-col gap-6">
+          <p className="reveal max-w-[62ch] text-2xl leading-snug">{lead}</p>
+          {rest.map((p) => (
+            <p key={p.slice(0, 24)} className="reveal max-w-[62ch] text-lg leading-relaxed text-ink-muted">
+              {p}
+            </p>
+          ))}
+          <p className="reveal flex flex-col gap-1 border-t border-line pt-6">
+            <span className="font-heading text-2xl font-medium">{story.signature.name}</span>
+            <span className="text-lg text-ink-muted">{story.signature.line}</span>
+          </p>
+        </div>
+      </div>
+    </Container>
+  );
+}
 
 /** Company overview: the approved culture paragraphs beside a photograph, and the founder's name. */
 export function CompanyOverview() {

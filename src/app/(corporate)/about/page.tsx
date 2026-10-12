@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { CompanyOverview, MissionValues } from "@/components/corporate/about-sections";
+import { CompanyOverview, MissionValues, OurStory } from "@/components/corporate/about-sections";
 import { CtaBand } from "@/components/corporate/cta-band";
 import { TeamProcess } from "@/components/corporate/home/team-process";
 import { Testimonials } from "@/components/corporate/home/testimonials";
@@ -15,6 +15,7 @@ export default async function AboutPage() {
   return (
     <>
       <PageHero title={about.title} body={about.headline} />
+      <OurStory />
       <CompanyOverview />
       <TeamProcess members={content.team} process={content.workProcess} />
       <MissionValues />

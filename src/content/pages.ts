@@ -97,6 +97,26 @@ export const team = {
   ceoPhoto: { src: "/photos/tonia-ozoede.webp", alt: "Tonia Ozoede, CEO & Founder of Idyllic Technologies", width: 810, height: 1080 },
 } as const;
 
+/**
+ * "Who We Are", the company story, as supplied by Idyllic. Kept word for word, including the British spelling.
+ * The one change: the supplied closing line joined the company name and its tagline with a dash. It is shown as
+ * two lines instead, so every word is the same and no dash is used.
+ */
+export const story = {
+  title: "Who We Are",
+  tagline: "Powering Progress. Enabling Possibilities. Building a Sustainable Future.",
+  paragraphs: [
+    "At Idyllic Technologies Ltd, our story is one of vision, growth, innovation, and an unwavering commitment to delivering reliable energy solutions.",
+    "Our journey began in 2010 as distributors of Fullriver batteries, with a clear mission: to provide dependable power solutions that meet the needs of homes, businesses, and industries. What started as a focused battery distribution business has steadily evolved into a dynamic technology company offering a broader range of power and energy solutions.",
+    "As our business grew and market needs evolved, we expanded our portfolio to include Eaton UPS systems and distribution boards, strengthening our capacity to support customers with reliable power backup and electrical distribution solutions.",
+    "Recognising the growing demand for sustainable and efficient energy, we took another bold step forward into renewable energy solutions. Today, Idyllic Technologies Ltd brings together a carefully selected range of premium products from reputable Original Equipment Manufacturers (OEMs), including Solis inverters, Ecogreen solar panels, and BATTSYS lithium batteries.",
+    "This evolution reflects more than business growth; it represents our determination to stay ahead of changing energy needs, embrace innovation, and make dependable, high-quality power solutions more accessible to our customers.",
+    "At Idyllic Technologies Ltd, we believe that access to reliable energy is essential for productivity, business continuity, comfort, and sustainable development. We are committed to connecting our customers and business partners with quality products, trusted technology, and solutions designed to deliver lasting value.",
+    "From our beginnings in battery distribution to our growing presence in renewable energy, our purpose remains the same: to power possibilities and help our customers move forward with confidence.",
+  ],
+  signature: { name: "Idyllic Technologies Ltd", line: "Your Trusted Partner in Power and Energy Solutions." },
+} as const;
+
 export const about = {
   title: "About Us",
   whoWeAre: { title: "Who We are", body: "Idyllic technologies limited is an Alternative Energy company" },
