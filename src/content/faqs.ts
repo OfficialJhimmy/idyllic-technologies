@@ -46,7 +46,7 @@ export const faqSeeds: readonly FaqSeed[] = [
   {
     question: "Which brands do you work with?",
     answer:
-      "We distribute high quality renewable products from OEMs with proven track records. Our partners include Fullriver, Eaton, Schneider Electric and Eco Green Energy.",
+      "Our range brings together Fullriver batteries, Eaton UPS systems and distribution boards, Solis inverters, Ecogreen solar panels, and BATTSYS lithium batteries, from reputable Original Equipment Manufacturers (OEMs).",
     sort: 8,
   },
   {

@@ -26,7 +26,7 @@ export function TrustStats({ stats }: { stats: Stats }) {
         </div>
         {four.map((stat, i) => (
           <div key={stat.label} className={`reveal flex min-h-44 flex-col justify-between gap-8 rounded-container p-6 sm:p-8 ${tones[i]} ${spans[i]}`}>
-            <p className="font-heading text-6xl leading-none font-medium tabular-nums sm:text-7xl">{stat.display}</p>
+            <p className={`font-heading leading-none font-medium tabular-nums ${stat.display.length > 5 ? "text-5xl sm:text-6xl" : "text-6xl sm:text-7xl"}`}>{stat.display}</p>
             <p className="text-lg">{stat.label}</p>
           </div>
         ))}

@@ -11,11 +11,11 @@ import { TeamProcess } from "@/components/corporate/home/team-process";
 import { Testimonials } from "@/components/corporate/home/testimonials";
 import { TrustStats } from "@/components/corporate/home/trust-stats";
 import { WhoWeAre } from "@/components/corporate/home/who-we-are";
-import { hero } from "@/content/pages";
+import { hero, story } from "@/content/pages";
 import { getPublicCategories, getPublishedClients, getPublishedPosts, getPublishedTestimonials, getSiteContent } from "@/db/queries/public";
 import { pageMetadata } from "@/lib/seo";
 
-export const metadata: Metadata = pageMetadata({ title: "Idyllic Technologies", description: hero.body, path: "/" });
+export const metadata: Metadata = pageMetadata({ title: "Idyllic Technologies", description: story.tagline, path: "/" });
 
 export default async function HomePage() {
   const [content, categories, clients, testimonials, news] = await Promise.all([

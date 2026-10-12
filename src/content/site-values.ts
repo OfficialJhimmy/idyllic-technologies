@@ -15,10 +15,11 @@ export const siteValueSeeds: readonly SiteValueSeed[] = [
   {
     key: "home.stats",
     value: [
-      { display: "90+", label: "Countries Served" },
-      { display: "12k+", label: "Consultants Worldwide" },
-      { display: "72+", label: "Rewards and Accolades" },
-      { display: "20+", label: "Years in consulting" },
+      // From the company story (see story in pages.ts). No figures that the story does not state.
+      { display: "2010", label: "Our journey began, as distributors of Fullriver batteries" },
+      { display: "UPS", label: "Eaton UPS systems and distribution boards joined our portfolio" },
+      { display: "Solar", label: "Renewable energy solutions, including Solis inverters and Ecogreen solar panels" },
+      { display: "Lithium", label: "BATTSYS lithium batteries, from reputable OEMs" },
     ],
   },
   {

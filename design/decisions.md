@@ -439,3 +439,19 @@ The rule: **numbered pages** where people browse, compare, bookmark or share a p
 - **About page:** the full story is the first section (`#our-story`), with the tagline beside it and the signature line at the end.
 - **Home page, Who We Are:** the tagline, the first two paragraphs, and a "Read our full story" link to the About section. The logo and the photograph carousel stay. The earlier lead sentence and paragraph in that section ("We are a global renewable energy company...") were replaced by the new text; "Our value proposition" and "Our quality assurance" stay. The older text is still used for the Industries introduction.
 - "Read our full story" is my wording, not approved copy.
+
+## The story is the source of truth (Oct 12)
+The supplied "Who We Are" story supersedes any copy that contradicts it. What was found and changed:
+
+| Was | Now |
+| --- | --- |
+| Home stats: 90+ countries served, 12k+ consultants worldwide, 72+ rewards, 20+ years in consulting (template leftovers: a consultancy, global, and 20+ years against a 2010 start) | Four facts taken from the story: 2010, UPS, Solar, Lithium, each with a line from the story. No figure the story does not state. **Edited in the live database too**, because they are editable values (only replaced because they still held the seeded text). |
+| Footer statement on every page: "Nigeria's leading renewable energy company that is focused on selling and distribution of high quality renewable products..." | The story's opening sentence |
+| Industries introduction and the Products introduction: "We are a global renewable energy company..." and "We operate as a global renewable energy solutions provider..." | The story's paragraph on reliable energy, and the story's paragraph naming the products |
+| About page headline: "Idyllic Technologies is Nigeria leading renewable energy solution"; home page description: the solar line | The story's tagline |
+| "Which brands do you work with?" listed Fullriver, Eaton, Schneider Electric and Eco Green Energy | Fullriver, Eaton, Solis, Ecogreen and BATTSYS, as the story names them (seed and live FAQ, only replaced because it still held the seeded text) |
+| Unused leftovers: "Alternative Energy company" line, "2+ Branches Worldwide.", the long "global" overview paragraph | Removed |
+
+- **Guard:** `src/content/story-truth.test.ts` fails if seeded copy brings back "global", "worldwide", "consult", "countries served", "accolades", "Nigeria's leading" or "alternative energy company", or if the brands answer stops matching the story.
+- **Left alone on purpose:** the mission, vision and values; the corporate responsibility copy; the work process figures and wording; customer testimonials; blog posts and product descriptions written by staff in the admin; and the catalogue brand "Schneider Electric", which is catalogue data, not copy. **Idyllic should read these once against the story**, in particular the work process ("Sustainable Solar Electricity...") and the hero line, which speak only of solar while the story describes a wider range.
+- The four stat tiles are my selection from the story, so Idyllic should approve them.

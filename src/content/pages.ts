@@ -6,13 +6,33 @@
  * in the site_values table (seeded from src/content/site-values.ts), not here.
  */
 
+/**
+ * "Who We Are", the company story, as supplied by Idyllic. Kept word for word, including the British spelling.
+ * The one change: the supplied closing line joined the company name and its tagline with a dash. It is shown as
+ * two lines instead, so every word is the same and no dash is used.
+ */
+export const story = {
+  title: "Who We Are",
+  tagline: "Powering Progress. Enabling Possibilities. Building a Sustainable Future.",
+  paragraphs: [
+    "At Idyllic Technologies Ltd, our story is one of vision, growth, innovation, and an unwavering commitment to delivering reliable energy solutions.",
+    "Our journey began in 2010 as distributors of Fullriver batteries, with a clear mission: to provide dependable power solutions that meet the needs of homes, businesses, and industries. What started as a focused battery distribution business has steadily evolved into a dynamic technology company offering a broader range of power and energy solutions.",
+    "As our business grew and market needs evolved, we expanded our portfolio to include Eaton UPS systems and distribution boards, strengthening our capacity to support customers with reliable power backup and electrical distribution solutions.",
+    "Recognising the growing demand for sustainable and efficient energy, we took another bold step forward into renewable energy solutions. Today, Idyllic Technologies Ltd brings together a carefully selected range of premium products from reputable Original Equipment Manufacturers (OEMs), including Solis inverters, Ecogreen solar panels, and BATTSYS lithium batteries.",
+    "This evolution reflects more than business growth; it represents our determination to stay ahead of changing energy needs, embrace innovation, and make dependable, high-quality power solutions more accessible to our customers.",
+    "At Idyllic Technologies Ltd, we believe that access to reliable energy is essential for productivity, business continuity, comfort, and sustainable development. We are committed to connecting our customers and business partners with quality products, trusted technology, and solutions designed to deliver lasting value.",
+    "From our beginnings in battery distribution to our growing presence in renewable energy, our purpose remains the same: to power possibilities and help our customers move forward with confidence.",
+  ],
+  signature: { name: "Idyllic Technologies Ltd", line: "Your Trusted Partner in Power and Energy Solutions." },
+} as const;
+
+
 export const company = {
   name: "Idyllic Technologies",
-  /** Footer and "Who we are" statement. */
-  statement:
-    "Idyllic Technologies is Nigeria's leading renewable energy company that is focused on selling and distribution of high quality renewable products from OEM (Original Equipment Manufacturers) with proven track records.",
-  overview:
-    "We are a global renewable energy company focused on distribution of high-quality renewable products from OEM (Original Equipment Manufacturers) with proven track records. Our team of experienced engineers are on ground to attend to the needs of our customers 24/7.",
+  /** Footer statement: the opening sentence of the story. */
+  statement: story.paragraphs[0],
+  /** Introduction to the industries: the story's paragraph on why reliable energy matters. */
+  overview: story.paragraphs[5],
   helpLabel: "Need Help? Call us now:",
   officeLabel: "Visit Our Office:",
   /** Wording kept as supplied, including "All Right Reserved". Only the year changed: {year} is filled in with the current year. */
@@ -22,8 +42,6 @@ export const company = {
 export const hero = {
   title: "Let The Sun Do The Work",
   body: "Energize the future with the power of solar energy.",
-  detail:
-    "Idyllic Technologies delivers clean, sustainable, and reliable electricity solutions designed for both businesses and homes. Harness innovative solar technology to reduce costs, minimize environmental impact, and enjoy uninterrupted energy, while contributing to a greener, smarter, and more efficient future for everyone.",
   image: { src: "/photos/hero.webp", alt: "Rows of solar panels on a metal roof under a sunrise sky", width: 2400, height: 1350 },
 } as const;
 
@@ -88,7 +106,7 @@ export const whyIdyllic: readonly { title: string; body: string }[] = [
 
 export const productsIntro = {
   title: "Our Products",
-  body: "We operate as a global renewable energy solutions provider, specializing in the sourcing and distribution of premium renewable energy products that enable residential, commercial, and industrial users to achieve dependable and sustainable power independence.",
+  body: story.paragraphs[3],
 } as const;
 
 export const team = {
@@ -97,32 +115,12 @@ export const team = {
   ceoPhoto: { src: "/photos/tonia-ozoede.webp", alt: "Tonia Ozoede, CEO & Founder of Idyllic Technologies", width: 810, height: 1080 },
 } as const;
 
-/**
- * "Who We Are", the company story, as supplied by Idyllic. Kept word for word, including the British spelling.
- * The one change: the supplied closing line joined the company name and its tagline with a dash. It is shown as
- * two lines instead, so every word is the same and no dash is used.
- */
-export const story = {
-  title: "Who We Are",
-  tagline: "Powering Progress. Enabling Possibilities. Building a Sustainable Future.",
-  paragraphs: [
-    "At Idyllic Technologies Ltd, our story is one of vision, growth, innovation, and an unwavering commitment to delivering reliable energy solutions.",
-    "Our journey began in 2010 as distributors of Fullriver batteries, with a clear mission: to provide dependable power solutions that meet the needs of homes, businesses, and industries. What started as a focused battery distribution business has steadily evolved into a dynamic technology company offering a broader range of power and energy solutions.",
-    "As our business grew and market needs evolved, we expanded our portfolio to include Eaton UPS systems and distribution boards, strengthening our capacity to support customers with reliable power backup and electrical distribution solutions.",
-    "Recognising the growing demand for sustainable and efficient energy, we took another bold step forward into renewable energy solutions. Today, Idyllic Technologies Ltd brings together a carefully selected range of premium products from reputable Original Equipment Manufacturers (OEMs), including Solis inverters, Ecogreen solar panels, and BATTSYS lithium batteries.",
-    "This evolution reflects more than business growth; it represents our determination to stay ahead of changing energy needs, embrace innovation, and make dependable, high-quality power solutions more accessible to our customers.",
-    "At Idyllic Technologies Ltd, we believe that access to reliable energy is essential for productivity, business continuity, comfort, and sustainable development. We are committed to connecting our customers and business partners with quality products, trusted technology, and solutions designed to deliver lasting value.",
-    "From our beginnings in battery distribution to our growing presence in renewable energy, our purpose remains the same: to power possibilities and help our customers move forward with confidence.",
-  ],
-  signature: { name: "Idyllic Technologies Ltd", line: "Your Trusted Partner in Power and Energy Solutions." },
-} as const;
-
 export const about = {
   title: "About Us",
-  whoWeAre: { title: "Who We are", body: "Idyllic technologies limited is an Alternative Energy company" },
   valueProposition: { title: "Our value proposition", body: "We focus on Customer satisfaction" },
   qualityAssurance: { title: "Our quality assurance", body: "All our product come with guarantee" },
-  headline: "Idyllic Technologies is Nigeria leading renewable energy solution",
+  /** The About page introduction: the story's tagline. */
+  headline: story.tagline,
   culture: [
     "At Idyllic Technologies we love what we do and our employees are what makes Idyllic Technologies a great place to work! We provide a collaborative, challenging work environment where our employees enjoy coming into work each day to accomplish great things together. Our team are passionate, highly motivated, innovative skilled problem-solvers who thrive in a culture of excellence and operate with integrity in all that they do.",
     "If you are a driven self-starter and want to be part of our long-term success story, join us in our mission to tackle climate change and provide sustainable and reliable power to the African continent.",
@@ -186,7 +184,6 @@ export const contactPage = {
     title: "Career",
     body: "Do you want to build a career with us? Idyllic Technologies has over the years welcome season and aspiring professionals into the workforce, Kindly send us a mail with your updated CV;",
   },
-  branches: "2+ Branches Worldwide.",
   sendLabel: "Send Message Us",
 } as const;
 

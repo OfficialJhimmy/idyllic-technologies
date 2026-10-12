@@ -25,7 +25,7 @@ describe("site value parsing", () => {
   });
   it("falls back to the approved starting value when the stored one is missing or broken", () => {
     const stats = parseSiteValue(statsSchema, "home.stats", null);
-    expect(stats.map((s) => s.display)).toEqual(["90+", "12k+", "72+", "20+"]);
+    expect(stats.map((s) => s.display)).toEqual(["2010", "UPS", "Solar", "Lithium"]);
     expect(parseSiteValue(workProcessSchema, "about.work_process", { nonsense: true }).map((w) => w.percent)).toEqual([85, 96, 74, 53]);
     expect(parseSiteValue(contactSchema, "contact.details", "oops").offices).toHaveLength(2);
   });
