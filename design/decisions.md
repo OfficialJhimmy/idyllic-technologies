@@ -402,3 +402,9 @@ The rule: **numbered pages** where people browse, compare, bookmark or share a p
 - **The conversation survives a refresh** (`sessionStorage`, this tab only, dropped after 12 hours). Only what was said and chosen is kept, the saved data is checked before use, and "Start over" clears it.
 - **Greeting by the visitor's own clock**: morning until noon, afternoon until 5 pm, evening after. Renewed on every start and when a saved conversation is reopened. The wording is mine, not approved copy.
 - **Team order:** Mr Jude Jibunor, Mr Rotimi, Mr Sunday ("Member Technical team", as supplied, without a comma).
+
+## Why the Vercel site felt slow (Oct 12)
+
+- **Measured:** about 0.8 to 1 second to first byte on every public page, every response `x-vercel-cache: MISS`, running in Vercel's Washington D.C. region (iad1). A few first requests after a deploy hung for a long time, which did not repeat.
+- **Causes:** (1) the pages are rendered on request (see the build timeout note above), so every visit waited for the database; (2) the functions ran in Washington while the Supabase database is in London (eu-west-2), so each query crossed the Atlantic, about 80 ms each way, and a new function instance also pays several round trips just to connect. Localhost is near the database and warm.
+- **Fixes:** `vercel.json` now holds only `"regions": ["lhr1"]` (London, next to the database; this is not the earlier `services` setup that broke image optimisation). Public pages send `Cache-Control: public, s-maxage=60, stale-while-revalidate=60`, so Vercel's CDN keeps each page for a minute and most visits never reach the database. Admin, API, Next's own files and files with an extension are excluded. Content changes show up within about a minute, which matches the data cache.
