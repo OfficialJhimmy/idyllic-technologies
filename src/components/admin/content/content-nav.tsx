@@ -18,7 +18,7 @@ export function ContentNav() {
           const active = pathname.startsWith(t.href);
           return (
             <li key={t.href}>
-              <Link href={t.href} aria-current={active ? "page" : undefined} className={`flex h-11 items-center rounded-full px-3 font-medium whitespace-nowrap transition-[background-color,color,transform] duration-150 active:scale-[0.97] min-[400px]:px-4 sm:px-5 ${active ? "bg-primary text-on-primary" : "text-ink-muted hover:bg-sunken hover:text-ink"}`}>
+              <Link prefetch={false} href={t.href} aria-current={active ? "page" : undefined} className={`flex h-11 items-center rounded-full px-3 font-medium whitespace-nowrap transition-[background-color,color,transform] duration-150 active:scale-[0.97] min-[400px]:px-4 sm:px-5 ${active ? "bg-primary text-on-primary" : "text-ink-muted hover:bg-sunken hover:text-ink"}`}>
                 {t.label}
               </Link>
             </li>

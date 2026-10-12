@@ -17,7 +17,7 @@ export default async function BrandsPage({ searchParams }: { searchParams: Promi
   const all = await listBrands();
   const { rows: brands, page, pages } = paginate(all, parsePage((await searchParams).page), PAGE_SIZE);
   const create = (
-    <Link href="/admin/brands/new" className={buttonStyles()}>
+    <Link prefetch={false} href="/admin/brands/new" className={buttonStyles()}>
       New brand
     </Link>
   );
@@ -31,7 +31,7 @@ export default async function BrandsPage({ searchParams }: { searchParams: Promi
         <ul className="divide-y divide-line rounded-card bg-surface">
           {brands.map((b) => (
             <li key={b.id}>
-              <Link href={`/admin/brands/${b.id}`} className="flex min-h-16 items-center justify-between gap-4 px-5 py-4 hover:bg-sunken">
+              <Link prefetch={false} href={`/admin/brands/${b.id}`} className="flex min-h-16 items-center justify-between gap-4 px-5 py-4 hover:bg-sunken">
                 <span className="font-medium">{b.name}</span>
                 <span className="text-ink-muted tabular-nums">{b.productCount} product{b.productCount === 1 ? "" : "s"}</span>
               </Link>

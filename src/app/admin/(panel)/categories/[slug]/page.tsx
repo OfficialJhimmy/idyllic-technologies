@@ -20,7 +20,7 @@ export default async function EditCategoryPage({ params }: { params: Promise<{ s
       <PageHeader
         title={category.name}
         back={
-          <Link href="/admin/categories" className="inline-flex h-11 items-center text-ink-muted underline-offset-4 hover:underline">
+          <Link prefetch={false} href="/admin/categories" className="inline-flex h-11 items-center text-ink-muted underline-offset-4 hover:underline">
             All categories
           </Link>
         }

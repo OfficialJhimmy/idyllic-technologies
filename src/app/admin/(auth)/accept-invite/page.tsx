@@ -38,7 +38,7 @@ export default async function AcceptInvitePage({ searchParams }: { searchParams:
             <div className="flex flex-col gap-4">
               <h1 className="text-3xl font-medium">This link does not work</h1>
               <p className="max-w-[65ch] text-ink-muted">It may be incomplete, or it was already used. Ask an Admin to send you a new invitation.</p>
-              <Link href="/admin/login" className="inline-flex min-h-11 w-fit items-center font-medium text-action underline underline-offset-4">
+              <Link prefetch={false} href="/admin/login" className="inline-flex min-h-11 w-fit items-center font-medium text-action underline underline-offset-4">
                 Go to sign in
               </Link>
             </div>

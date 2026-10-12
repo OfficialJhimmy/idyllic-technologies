@@ -14,7 +14,7 @@ const PAGE_SIZE = 20;
 export default async function AuthorsPage({ searchParams }: { searchParams: Promise<{ page?: string }> }) {
   const all = await listAuthors();
   const { rows: authors, page, pages } = paginate(all, parsePage((await searchParams).page), PAGE_SIZE);
-  const create = <Link href="/admin/blog/authors/new" className={buttonStyles()}>New author</Link>;
+  const create = <Link prefetch={false} href="/admin/blog/authors/new" className={buttonStyles()}>New author</Link>;
   return (
     <div className="flex max-w-3xl flex-col gap-8">
       <PageHeader title="Authors" description="Every published post needs an author." actions={create} />
@@ -24,7 +24,7 @@ export default async function AuthorsPage({ searchParams }: { searchParams: Prom
         <ul className="divide-y divide-line rounded-card bg-surface">
           {authors.map((a) => (
             <li key={a.id}>
-              <Link href={`/admin/blog/authors/${a.id}`} className="flex min-h-16 items-center justify-between gap-4 px-5 py-4 hover:bg-sunken">
+              <Link prefetch={false} href={`/admin/blog/authors/${a.id}`} className="flex min-h-16 items-center justify-between gap-4 px-5 py-4 hover:bg-sunken">
                 <span className="font-medium">{a.name}</span>
                 <span className="text-ink-muted tabular-nums">{a.postCount} post{a.postCount === 1 ? "" : "s"}</span>
               </Link>

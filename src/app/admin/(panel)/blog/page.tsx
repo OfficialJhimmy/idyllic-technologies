@@ -33,7 +33,7 @@ export default async function BlogPage({ searchParams }: { searchParams: Promise
   const filtered = Boolean(q || status || categoryId);
   const totalAll = counts.draft + counts.published + counts.archived;
   const create = (
-    <Link href="/admin/blog/new" className={buttonStyles()}>
+    <Link prefetch={false} href="/admin/blog/new" className={buttonStyles()}>
       New post
     </Link>
   );
@@ -45,9 +45,9 @@ export default async function BlogPage({ searchParams }: { searchParams: Promise
 
       {rows.length === 0 ? (
         filtered ? (
-          <EmptyState title="No posts match" body="Change or clear the filters to see more." action={<Link href="/admin/blog" className={buttonStyles({ variant: "secondary" })}>Clear filters</Link>} />
+          <EmptyState title="No posts match" body="Change or clear the filters to see more." action={<Link prefetch={false} href="/admin/blog" className={buttonStyles({ variant: "secondary" })}>Clear filters</Link>} />
         ) : (
-          <EmptyState title="No posts yet" body="Add an author first (every published post needs one), then write the first post. It stays a draft until you publish it." action={<div className="flex flex-wrap gap-2">{create}<Link href="/admin/blog/authors/new" className={buttonStyles({ variant: "secondary" })}>Add an author</Link></div>} />
+          <EmptyState title="No posts yet" body="Add an author first (every published post needs one), then write the first post. It stays a draft until you publish it." action={<div className="flex flex-wrap gap-2">{create}<Link prefetch={false} href="/admin/blog/authors/new" className={buttonStyles({ variant: "secondary" })}>Add an author</Link></div>} />
         )
       ) : (
         <>

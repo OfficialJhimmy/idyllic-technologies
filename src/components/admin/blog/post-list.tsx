@@ -10,7 +10,7 @@ export function PostList({ rows }: { rows: PostListRow[] }) {
     <ul className="divide-y divide-line rounded-card bg-surface">
       {rows.map((p) => (
         <li key={p.id}>
-          <Link href={`/admin/blog/${p.id}`} className="grid grid-cols-[3.5rem_minmax(0,1fr)] items-center gap-x-4 gap-y-2 px-4 py-4 hover:bg-sunken md:grid-cols-[3.5rem_minmax(0,1fr)_11rem_7rem]">
+          <Link prefetch={false} href={`/admin/blog/${p.id}`} className="grid grid-cols-[3.5rem_minmax(0,1fr)] items-center gap-x-4 gap-y-2 px-4 py-4 hover:bg-sunken md:grid-cols-[3.5rem_minmax(0,1fr)_11rem_7rem]">
             {p.imagePath ? (
               <MediaThumb path={p.imagePath} alt={p.imageAlt ?? ""} width={112} height={112} sizes="3.5rem" className="!rounded-input" />
             ) : (

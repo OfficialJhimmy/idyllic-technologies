@@ -47,7 +47,7 @@ export default async function ProductsPage({ searchParams }: { searchParams: Pro
   const totalAll = counts.draft + counts.published + counts.archived;
 
   const create = (
-    <Link href="/admin/products/new" className={buttonStyles()}>
+    <Link prefetch={false} href="/admin/products/new" className={buttonStyles()}>
       New product
     </Link>
   );
@@ -63,9 +63,9 @@ export default async function ProductsPage({ searchParams }: { searchParams: Pro
 
       {rows.length === 0 ? (
         filtered ? (
-          <EmptyState title="No products match" body="Change or clear the filters to see more." action={<Link href="/admin/products" className={buttonStyles({ variant: "secondary" })}>Clear filters</Link>} />
+          <EmptyState title="No products match" body="Change or clear the filters to see more." action={<Link prefetch={false} href="/admin/products" className={buttonStyles({ variant: "secondary" })}>Clear filters</Link>} />
         ) : brands.length === 0 ? (
-          <EmptyState title="No products yet" body="Add a brand first, because every product belongs to one. Then add the first product." action={<Link href="/admin/brands/new" className={buttonStyles()}>Add a brand</Link>} />
+          <EmptyState title="No products yet" body="Add a brand first, because every product belongs to one. Then add the first product." action={<Link prefetch={false} href="/admin/brands/new" className={buttonStyles()}>Add a brand</Link>} />
         ) : (
           <EmptyState title="No products yet" body="Add the first product. It stays a draft until you publish it." action={create} />
         )

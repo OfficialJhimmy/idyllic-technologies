@@ -18,7 +18,7 @@ function StatCard({ title, total, href, parts }: { title: string; total: number;
     <section aria-label={title} className="flex flex-col gap-4 rounded-card bg-surface p-5">
       <div className="flex items-baseline justify-between gap-4">
         <h2 className="text-base font-medium">{title}</h2>
-        <Link href={href} className="inline-flex min-h-11 items-center text-sm font-medium text-action underline-offset-4 hover:underline">
+        <Link prefetch={false} href={href} className="inline-flex min-h-11 items-center text-sm font-medium text-action underline-offset-4 hover:underline">
           View all
         </Link>
       </div>
@@ -26,7 +26,7 @@ function StatCard({ title, total, href, parts }: { title: string; total: number;
       <ul className="flex flex-wrap gap-2">
         {parts.map((p) => (
           <li key={p.status}>
-            <Link href={`${href}?status=${p.status}`} className="inline-flex min-h-11 items-center gap-2 rounded-full border border-line-strong px-4 text-sm transition-colors duration-150 hover:bg-sunken">
+            <Link prefetch={false} href={`${href}?status=${p.status}`} className="inline-flex min-h-11 items-center gap-2 rounded-full border border-line-strong px-4 text-sm transition-colors duration-150 hover:bg-sunken">
               <span className="font-medium tabular-nums">{p.n}</span>
               <span className="text-ink-muted">{p.label}</span>
             </Link>
@@ -58,7 +58,7 @@ export default async function DashboardPage() {
         <section aria-label="Enquiries" className="flex flex-col gap-4 rounded-card bg-surface p-5">
           <div className="flex items-baseline justify-between gap-4">
             <h2 className="text-base font-medium">New enquiries</h2>
-            <Link href="/admin/enquiries" className="inline-flex min-h-11 items-center text-sm font-medium text-action underline-offset-4 hover:underline">
+            <Link prefetch={false} href="/admin/enquiries" className="inline-flex min-h-11 items-center text-sm font-medium text-action underline-offset-4 hover:underline">
               View all
             </Link>
           </div>
@@ -80,7 +80,7 @@ export default async function DashboardPage() {
             <ul className="divide-y divide-line">
               {newest.map((e) => (
                 <li key={e.id}>
-                  <Link href={`/admin/enquiries/${e.id}`} className="-mx-2 flex min-h-16 flex-col justify-center gap-0.5 rounded-input px-2 py-3 hover:bg-sunken">
+                  <Link prefetch={false} href={`/admin/enquiries/${e.id}`} className="-mx-2 flex min-h-16 flex-col justify-center gap-0.5 rounded-input px-2 py-3 hover:bg-sunken">
                     <span className="flex items-baseline justify-between gap-4">
                       <span className="truncate font-medium">{e.name}</span>
                       <span className="shrink-0 text-sm text-ink-muted">{timeAgo(new Date(e.createdAt))}</span>
@@ -108,7 +108,7 @@ export default async function DashboardPage() {
           ) : (
             <>
               <ActivityTimeline items={activity} compact />
-              <Link href="/admin/activity" className={buttonStyles({ variant: "secondary" })}>
+              <Link prefetch={false} href="/admin/activity" className={buttonStyles({ variant: "secondary" })}>
                 See all activity
                 <ArrowRight size={18} aria-hidden />
               </Link>

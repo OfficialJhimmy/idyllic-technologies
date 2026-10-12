@@ -25,7 +25,7 @@ export default async function EditProductPage({ params }: { params: Promise<{ id
       <PageHeader
         title={data.draft.name}
         back={
-          <Link href="/admin/products" className="inline-flex h-11 items-center text-ink-muted underline-offset-4 hover:underline">
+          <Link prefetch={false} href="/admin/products" className="inline-flex h-11 items-center text-ink-muted underline-offset-4 hover:underline">
             All products
           </Link>
         }

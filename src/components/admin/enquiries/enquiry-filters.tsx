@@ -16,7 +16,7 @@ export function EnquiryFilters({ q, type, status }: Props) {
       <SelectField id="filter-status" name="status" label="Status" emptyLabel="All" defaultValue={status} options={enquiryStatuses.map((s) => ({ value: s, label: enquiryStatusLabels[s] }))} />
       <div className="flex gap-2 sm:col-span-2 lg:col-span-1">
         <Button type="submit" size="lg">Apply</Button>
-        <Link href="/admin/enquiries" className="inline-flex h-12 items-center px-4 text-ink-muted underline-offset-4 hover:underline">Clear</Link>
+        <Link prefetch={false} href="/admin/enquiries" className="inline-flex h-12 items-center px-4 text-ink-muted underline-offset-4 hover:underline">Clear</Link>
       </div>
     </form>
   );

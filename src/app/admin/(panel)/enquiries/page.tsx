@@ -42,7 +42,7 @@ export default async function EnquiriesPage({ searchParams }: { searchParams: Pr
 
       {rows.length === 0 ? (
         filtered ? (
-          <EmptyState title="No enquiries match" body="Change or clear the filters to see more." action={<Link href="/admin/enquiries" className={buttonStyles({ variant: "secondary" })}>Clear filters</Link>} />
+          <EmptyState title="No enquiries match" body="Change or clear the filters to see more." action={<Link prefetch={false} href="/admin/enquiries" className={buttonStyles({ variant: "secondary" })}>Clear filters</Link>} />
         ) : (
           <EmptyState title="No enquiries yet" body="They appear here once the contact form and quote requests are live on the website." />
         )

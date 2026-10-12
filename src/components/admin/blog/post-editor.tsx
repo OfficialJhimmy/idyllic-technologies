@@ -178,7 +178,7 @@ export function PostEditor({ initial, status: initialStatus, publishedAt: initia
           {authors.length === 0 ? (
             <p className="text-sm text-ink-muted">
               There are no authors yet.{" "}
-              <Link href="/admin/blog/authors/new" className="text-action underline underline-offset-4">Add one</Link> before publishing.
+              <Link prefetch={false} href="/admin/blog/authors/new" className="text-action underline underline-offset-4">Add one</Link> before publishing.
             </p>
           ) : null}
           <TagInput id="post-tags" label="Tags" value={draft.tags} suggestions={tagSuggestions} error={errors.tags} onChange={(tags) => update({ tags })} />

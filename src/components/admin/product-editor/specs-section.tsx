@@ -25,7 +25,7 @@ export function SpecsSection({ draft, update, errors, defs, categories }: Props)
       ) : template.length === 0 ? (
         <p className="max-w-[65ch] text-ink-muted">
           {category.name} has no specs yet.{" "}
-          <Link href={`/admin/categories/${category.slug}`} className="text-action underline underline-offset-4">
+          <Link prefetch={false} href={`/admin/categories/${category.slug}`} className="text-action underline underline-offset-4">
             Define them in the category
           </Link>{" "}
           once the manufacturer data is to hand.

@@ -34,7 +34,7 @@ export default async function EnquiryPage({ params }: { params: Promise<{ id: st
       <PageHeader
         title={enquiry.name}
         description={dateFormat.format(new Date(enquiry.createdAt))}
-        back={<Link href="/admin/enquiries" className="inline-flex h-11 items-center text-ink-muted underline-offset-4 hover:underline">All enquiries</Link>}
+        back={<Link prefetch={false} href="/admin/enquiries" className="inline-flex h-11 items-center text-ink-muted underline-offset-4 hover:underline">All enquiries</Link>}
         actions={<EnquiryTypeBadge type={enquiry.type} />}
       />
 
@@ -52,7 +52,7 @@ export default async function EnquiryPage({ params }: { params: Promise<{ id: st
         {enquiry.productName ? (
           <>
             <dt className="text-sm font-medium text-ink-muted">Product</dt>
-            <dd>{enquiry.productId ? <Link href={`/admin/products/${enquiry.productId}`} className="text-action underline underline-offset-4">{enquiry.productName}</Link> : enquiry.productName}</dd>
+            <dd>{enquiry.productId ? <Link prefetch={false} href={`/admin/products/${enquiry.productId}`} className="text-action underline underline-offset-4">{enquiry.productName}</Link> : enquiry.productName}</dd>
           </>
         ) : null}
         <dt className="text-sm font-medium text-ink-muted">Message</dt>

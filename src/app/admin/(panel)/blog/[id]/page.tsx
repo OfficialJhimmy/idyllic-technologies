@@ -18,7 +18,7 @@ export default async function EditPostPage({ params }: { params: Promise<{ id: s
     <div className="flex flex-col gap-8">
       <PageHeader
         title={data.draft.title}
-        back={<Link href="/admin/blog" className="inline-flex h-11 items-center text-ink-muted underline-offset-4 hover:underline">All posts</Link>}
+        back={<Link prefetch={false} href="/admin/blog" className="inline-flex h-11 items-center text-ink-muted underline-offset-4 hover:underline">All posts</Link>}
       />
       <PostEditor key={data.draft.id} initial={data.draft} status={data.status} publishedAt={data.publishedAt} updatedAt={data.updatedAt} authors={authors} categories={categories} tagSuggestions={tags} siteUrl={process.env.NEXT_PUBLIC_SITE_URL ?? ""} />
     </div>

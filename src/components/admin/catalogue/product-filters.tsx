@@ -18,7 +18,7 @@ export function ProductFilters({ q, status, categoryId, brandId, categories, bra
       <SelectField id="filter-brand" name="brand" label="Brand" emptyLabel="All" defaultValue={brandId} options={brands.map((b) => ({ value: b.id, label: b.name }))} />
       <div className="flex gap-2 sm:col-span-2 lg:col-span-1">
         <Button type="submit" size="lg">Apply</Button>
-        <Link href="/admin/products" className="inline-flex h-12 items-center px-4 text-ink-muted underline-offset-4 hover:underline">Clear</Link>
+        <Link prefetch={false} href="/admin/products" className="inline-flex h-12 items-center px-4 text-ink-muted underline-offset-4 hover:underline">Clear</Link>
       </div>
     </form>
   );

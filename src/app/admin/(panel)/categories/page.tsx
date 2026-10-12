@@ -15,7 +15,7 @@ export default async function CategoriesPage() {
       <ul className="divide-y divide-line rounded-card bg-surface">
         {categories.map((c) => (
           <li key={c.id}>
-            <Link href={`/admin/categories/${c.slug}`} className="flex min-h-16 flex-col gap-1 px-5 py-4 hover:bg-sunken sm:flex-row sm:items-center sm:justify-between sm:gap-4">
+            <Link prefetch={false} href={`/admin/categories/${c.slug}`} className="flex min-h-16 flex-col gap-1 px-5 py-4 hover:bg-sunken sm:flex-row sm:items-center sm:justify-between sm:gap-4">
               <span className="font-medium">{c.name}</span>
               <span className="text-ink-muted tabular-nums">
                 {c.specCount} spec{c.specCount === 1 ? "" : "s"}, {c.productCount} product{c.productCount === 1 ? "" : "s"}
