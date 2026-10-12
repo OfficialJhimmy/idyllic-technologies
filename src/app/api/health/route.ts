@@ -1,4 +1,5 @@
 import { sql } from "drizzle-orm";
+import { createClient } from "@supabase/supabase-js";
 import { NextResponse } from "next/server";
 import { db } from "@/db";
 import { serverlessConnectionUrl } from "@/db/connection-url";
@@ -38,14 +39,30 @@ export async function GET() {
   const first = await timed("database: first query (includes connecting)", () => db.execute(sql`select 1`));
   const second = await timed("database: second query, same connection", () => db.execute(sql`select 1`));
   const real = await timed("database: product_categories", () => db.execute(sql`select id, slug, name from product_categories order by sort asc`));
-  const auth = await timed("supabase auth service", () => supabaseAdmin().auth.admin.listUsers({ page: 1, perPage: 1 }));
+  const auth = await timed("supabase auth service (admin call)", () => supabaseAdmin().auth.admin.listUsers({ page: 1, perPage: 1 }));
+
+  // The same kinds of calls sign in and sign out make, with a made up account, so nothing real is touched.
+  const base = process.env.NEXT_PUBLIC_SUPABASE_URL ?? "";
+  const anon = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY ?? "";
+  const probe = createClient(base, anon, { auth: { persistSession: false, autoRefreshToken: false } });
+  const keys = await timed("auth: public signing keys", async () => {
+    const res = await fetch(`${base}/auth/v1/.well-known/jwks.json`, { headers: { apikey: anon }, signal: AbortSignal.timeout(LIMIT_MS) });
+    if (!res.ok) throw new Error(`status ${res.status}`);
+  });
+  const login = await timed("auth: sign-in attempt with a made up account (expected to be refused)", async () => {
+    const { error } = await probe.auth.signInWithPassword({ email: "health-check@invalid.example", password: "not-a-real-password" });
+    if (error && !/invalid/i.test(error.message)) throw error;
+  });
+  const logout = await timed("auth: sign-out of an unknown token (expected to be refused)", async () => {
+    await probe.auth.admin.signOut("not-a-real-token");
+  });
 
   return NextResponse.json(
     {
       region: process.env.VERCEL_REGION ?? "not on Vercel",
       database: described,
       poolMax: Number(process.env.DB_POOL_MAX) || (process.env.VERCEL ? 2 : 3),
-      steps: [first, second, real, auth],
+      steps: [first, second, real, auth, keys, login, logout],
     },
     { headers: { "Cache-Control": "no-store" } },
   );

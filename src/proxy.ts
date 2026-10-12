@@ -1,6 +1,7 @@
 import { createServerClient } from "@supabase/ssr";
 import { NextResponse, type NextRequest } from "next/server";
 import { isShopHost } from "@/lib/hosts";
+import { authFetch } from "@/lib/supabase/fetch";
 
 /**
  * 1. Host routing: shop.* requests are rewritten to /shop-host/..., which lives in
@@ -37,6 +38,7 @@ export async function proxy(request: NextRequest) {
   const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
   if (pathname.startsWith("/admin") && supabaseUrl && supabaseAnonKey) {
     const supabase = createServerClient(supabaseUrl, supabaseAnonKey, {
+      global: { fetch: authFetch },
       cookies: {
         getAll: () => request.cookies.getAll(),
         setAll: (items) =>

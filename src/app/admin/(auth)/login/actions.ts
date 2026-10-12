@@ -18,7 +18,11 @@ export async function signInAction(_prev: FormState, formData: FormData): Promis
 
   const supabase = await supabaseServer();
   const { error } = await supabase.auth.signInWithPassword(parsed.data);
-  if (error) return { error: BAD_CREDENTIALS };
+  if (error) {
+    // A wrong password is a 400 from the service. Anything else (no answer, a server error) is not the person's mistake.
+    const wrongPassword = error.status === 400 || error.code === "invalid_credentials";
+    return { error: wrongPassword ? BAD_CREDENTIALS : "The sign in service did not answer in time. Wait a moment and try again." };
+  }
 
   // The login page works out the next step (code, enrolment or dashboard) from the session.
   redirect("/admin/login");
