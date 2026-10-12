@@ -1,3 +1,4 @@
+import { requireAdmin } from "@/lib/auth";
 import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
@@ -21,6 +22,7 @@ function payloadRows(payload: unknown): { key: string; value: string }[] {
 }
 
 export default async function EnquiryPage({ params }: { params: Promise<{ id: string }> }) {
+  await requireAdmin({ section: "enquiries" });
   const parsed = idSchema.safeParse((await params).id);
   if (!parsed.success) notFound();
   const enquiry = await getEnquiry(parsed.data);

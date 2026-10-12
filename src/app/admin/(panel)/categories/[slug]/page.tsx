@@ -1,3 +1,4 @@
+import { requireAdmin } from "@/lib/auth";
 import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
@@ -9,6 +10,7 @@ import { getCategoryBySlug, listSpecDefinitions, specValueCounts } from "@/db/qu
 export const metadata: Metadata = { title: "Edit category" };
 
 export default async function EditCategoryPage({ params }: { params: Promise<{ slug: string }> }) {
+  await requireAdmin({ section: "categories" });
   const category = await getCategoryBySlug((await params).slug);
   if (!category) notFound();
   const [specs, valueCounts] = await Promise.all([listSpecDefinitions(category.id), specValueCounts(category.id)]);

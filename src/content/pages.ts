@@ -27,7 +27,8 @@ export const hero = {
   image: { src: "/photos/hero.webp", alt: "Rows of solar panels on a metal roof under a sunrise sky", width: 2400, height: 1350 },
 } as const;
 
-export type Industry = { id: string; title: string; body: string; image: { src: string; alt: string; width: number; height: number } };
+/** `fit: "contain"` shows the whole picture on a soft backdrop, for collages and wide group shots that cover would cut. */
+export type Industry = { id: string; title: string; body: string; image: { src: string; alt: string; width: number; height: number; fit?: "cover" | "contain" } };
 
 export const industriesIntro = { title: "Industries We Cover", body: company.overview } as const;
 
@@ -36,31 +37,31 @@ export const industries: readonly Industry[] = [
     id: "banking-financial-services",
     title: "Banking & Financial Services",
     body: "Idyllic Technologies delivers customized energy solutions for the banking and financial sector.",
-    image: { src: "/photos/industry-banking.webp", alt: "Rows of server racks in a dark, blue-lit data hall", width: 1400, height: 1400 },
+    image: { src: "/photos/industry-banking-idyllic.webp", alt: "Two workers in hard hats fitting solar panels on a tiled roof", width: 1200, height: 672 },
   },
   {
     id: "capital-projects-infrastructure",
     title: "Capital Projects & Infrastructure",
     body: "Specialized capabilities to help clients face the challenges of today.",
-    image: { src: "/photos/industry-infrastructure.webp", alt: "Electrical meters and pipework fixed to a plastered wall", width: 1400, height: 933 },
+    image: { src: "/photos/industry-capital-idyllic.webp", alt: "Five colleagues standing together at an Idyllic Technologies event", width: 1200, height: 500, fit: "contain" },
   },
   {
     id: "hospitality",
     title: "Hospitality",
     body: "Our Hybrid solution provide alternative energy solution which in turn reduces cost of operations",
-    image: { src: "/photos/industry-hospitality.webp", alt: "A technician in a yellow hard hat servicing an outdoor cooling unit", width: 1400, height: 933 },
+    image: { src: "/photos/industry-hospitality-idyllic.webp", alt: "Rows of large batteries below a wall of inverters and electrical boxes", width: 1152, height: 604, fit: "contain" },
   },
   {
     id: "travel-transport-logistics",
     title: "Travel, Transport & Logistics",
     body: "Idyllic Technologies delivers innovative alternative energy solutions for the Travel and Logistics industry",
-    image: { src: "/photos/industry-travel.webp", alt: "Wind turbines in a field under an evening sky", width: 1400, height: 933 },
+    image: { src: "/photos/industry-travel-idyllic.webp", alt: "A collage of a commuter train, offshore wind turbines, a solar mirror array and a solar powered roadside unit", width: 1079, height: 673, fit: "contain" },
   },
   {
     id: "healthcare-life-sciences",
     title: "Healthcare & Life Sciences",
     body: "We provide affordable protection for network and telecom equipment, IDF, servers, storage, VoIP and distributed IT,",
-    image: { src: "/photos/industry-healthcare.webp", alt: "A long server room lit in cool blue light", width: 1400, height: 862 },
+    image: { src: "/photos/industry-healthcare-idyllic.webp", alt: "A collage of hospital equipment, a security control room, emergency lights and two UPS units", width: 1080, height: 735, fit: "contain" },
   },
   {
     id: "energy-power-products",

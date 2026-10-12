@@ -6,7 +6,7 @@ import { useEffect, useRef, useState } from "react";
 import type { Turn } from "@/assistant/engine/types";
 import type { Origins } from "@/assistant/ui/links";
 import { useShopOrigin, useSiteOrigin } from "@/components/corporate/shop-link";
-import { ComparisonTurn, FailedLine, HandoffTurn, PendingLine, QuestionTurn, RecommendationTurn, UserLine } from "@/assistant/ui/turns";
+import { ComparisonTurn, FailedLine, GreetingLine, HandoffTurn, PendingLine, QuestionTurn, RecommendationTurn, UserLine } from "@/assistant/ui/turns";
 import { announcementFor, useAssistant, type Entry } from "@/assistant/ui/use-assistant";
 import { track } from "@/lib/analytics";
 
@@ -56,10 +56,14 @@ export function AssistantLauncher({ opening, host, origins: configured }: Props)
       <RadixDialog.Trigger asChild>
         <button
           type="button"
-          className="assistant-launcher fixed right-4 bottom-4 z-30 inline-flex h-12 items-center gap-2 rounded-full bg-action px-5 font-medium text-on-action shadow-raised transition-[background-color,transform] duration-150 ease-[var(--ease-out-strong)] hover:bg-action-hover active:scale-[0.97]"
+          aria-label="Energy Assistant"
+          className="assistant-launcher group fixed right-4 bottom-4 z-30 flex size-14 items-center justify-center rounded-full bg-action text-on-action shadow-raised transition-[background-color,transform] duration-150 ease-[var(--ease-out-strong)] hover:bg-action-hover active:scale-[0.94]"
         >
-          <Lightning size={22} weight="fill" aria-hidden />
-          Energy Assistant
+          <Lightning size={26} weight="fill" aria-hidden />
+          {/* The name appears beside the button on hover and focus, so the button itself stays small. */}
+          <span aria-hidden className="pointer-events-none absolute right-full mr-3 hidden rounded-full bg-ink px-4 py-2 text-sm font-medium whitespace-nowrap text-surface opacity-0 transition-opacity duration-150 group-hover:opacity-100 group-focus-visible:opacity-100 sm:block">
+            Energy Assistant
+          </span>
         </button>
       </RadixDialog.Trigger>
 
@@ -127,6 +131,7 @@ export function AssistantLauncher({ opening, host, origins: configured }: Props)
 }
 
 function EntryView({ entry, answered, busy, origins, onChoose, onCompare, onClose }: { entry: Entry; answered: boolean; busy: boolean; origins: Origins; onChoose: Parameters<typeof QuestionTurn>[0]["onChoose"]; onCompare: (ids: string[]) => void; onClose: () => void }) {
+  if (entry.kind === "greeting") return <GreetingLine text={entry.text} />;
   if (entry.kind === "user") return <UserLine text={entry.text} />;
   const { turn } = entry;
   switch (turn.kind) {

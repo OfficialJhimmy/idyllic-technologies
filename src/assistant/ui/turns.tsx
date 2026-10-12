@@ -15,6 +15,15 @@ export function AssistantLine({ children }: { children: React.ReactNode }) {
   return <div className="assistant-line flex max-w-[92%] flex-col gap-3 self-start rounded-card rounded-tl-input bg-sunken p-4">{children}</div>;
 }
 
+/** The first thing said, by the time of day. */
+export function GreetingLine({ text }: { text: string }) {
+  return (
+    <AssistantLine>
+      <p className="font-heading text-xl font-medium">{text}</p>
+    </AssistantLine>
+  );
+}
+
 export function UserLine({ text }: { text: string }) {
   return <p className="assistant-line max-w-[85%] self-end rounded-full bg-primary px-5 py-2.5 font-medium text-on-primary">{text}</p>;
 }

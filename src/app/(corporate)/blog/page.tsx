@@ -61,7 +61,7 @@ export default async function BlogPage({ searchParams }: { searchParams: Promise
                 ))}
               </ul>
             ) : null}
-            <Pagination basePath="/blog" page={page} pages={pages} params={{ category: category?.slug, tag }} />
+            <Pagination align="center" basePath="/blog" page={page} pages={pages} params={{ category: category?.slug, tag }} />
           </>
         )}
       </Container>

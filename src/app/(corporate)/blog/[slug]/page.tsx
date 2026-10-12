@@ -1,13 +1,17 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
+import { ArrowLeft } from "@phosphor-icons/react/dist/ssr";
+import { PostMeta } from "@/components/corporate/blog/post-meta";
+import { ReadingLayout } from "@/components/corporate/blog/reading-layout";
 import { Container } from "@/components/corporate/container";
-import { formatDate } from "@/components/corporate/format";
 import { JsonLd } from "@/components/corporate/json-ld";
 import { MediaImage } from "@/components/corporate/media-image";
-import { getPublishedPost } from "@/db/queries/public";
+import { PostCard } from "@/components/corporate/post-card";
+import { getPublishedPost, getRelatedPosts } from "@/db/queries/public";
+import { readingMinutes } from "@/lib/blog/reading";
 import { sanitizePostHtml } from "@/lib/blog/sanitize";
-import { articleJsonLd, breadcrumbJsonLd, mediaFileUrl, pageMetadata } from "@/lib/seo";
+import { absoluteUrl, articleJsonLd, breadcrumbJsonLd, mediaFileUrl, pageMetadata } from "@/lib/seo";
 
 type Params = { params: Promise<{ slug: string }> };
 
@@ -23,21 +27,19 @@ export default async function PostPage({ params }: Params) {
   // Cleaned when saved, and cleaned again here, so nothing stored can ever reach a visitor unchecked.
   const body = sanitizePostHtml(post.body, { mediaBaseUrl: mediaFileUrl("").replace(/\/$/, "") });
 
+  const minutes = readingMinutes(body);
+  const related = await getRelatedPosts(post.id, 3);
+  const url = absoluteUrl(`/blog/${post.slug}`);
+
   return (
     <>
-      <Container as="header" className="flex flex-col gap-6 pt-16 pb-10 sm:pt-24">
-        <Link href="/blog" className="w-fit text-ink-muted underline-offset-4 hover:underline">All posts</Link>
-        <h1 className="hero-rise max-w-4xl text-4xl font-medium sm:text-6xl">{post.title}</h1>
-        <p className="text-ink-muted">
-          <time dateTime={post.publishedAt}>{formatDate(post.publishedAt)}</time>
-          {post.authorName ? `, by ${post.authorName}` : ""}
-          {post.categoryName ? (
-            <>
-              {", "}
-              <Link href={`/blog?category=${post.categorySlug}`} className="underline-offset-4 hover:underline">{post.categoryName}</Link>
-            </>
-          ) : null}
-        </p>
+      <Container as="header" className="flex flex-col gap-7 pt-16 pb-10 sm:pt-24">
+        <Link href="/blog" className="inline-flex min-h-11 w-fit items-center gap-2 text-ink-muted underline-offset-4 hover:text-ink hover:underline">
+          <ArrowLeft size={18} aria-hidden />
+          All posts
+        </Link>
+        <h1 className="hero-rise text-4xl leading-[1.05] font-medium text-balance sm:text-6xl lg:text-7xl">{post.title}</h1>
+        <PostMeta publishedAt={post.publishedAt} authorName={post.authorName} categoryName={post.categoryName} categorySlug={post.categorySlug} minutes={minutes} />
       </Container>
 
       {post.image ? (
@@ -49,25 +51,42 @@ export default async function PostPage({ params }: Params) {
       ) : null}
 
       <Container as="article" className="pb-16">
-        <div className="prose-public" dangerouslySetInnerHTML={{ __html: body }} />
-        {post.tags.length > 0 ? (
-          <ul className="mt-12 flex flex-wrap gap-2" aria-label="Tags">
-            {post.tags.map((t) => (
-              <li key={t.slug}>
-                <Link href={`/blog?tag=${t.slug}`} className="inline-flex h-10 items-center rounded-full border border-line-strong px-4 text-sm font-medium transition-[background-color,transform] duration-150 hover:bg-sunken active:scale-[0.97]">
-                  {t.name}
-                </Link>
+        <ReadingLayout minutes={minutes} url={url} title={post.title}>
+          <div className="prose-public prose-wide" dangerouslySetInnerHTML={{ __html: body }} />
+          {post.tags.length > 0 ? (
+            <ul className="mt-12 flex flex-wrap gap-2" aria-label="Tags">
+              {post.tags.map((t) => (
+                <li key={t.slug}>
+                  <Link href={`/blog?tag=${t.slug}`} className="inline-flex h-10 items-center rounded-full border border-line-strong px-4 text-sm font-medium transition-[background-color,transform] duration-150 hover:bg-sunken active:scale-[0.97]">
+                    {t.name}
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          ) : null}
+          {post.authorName && post.authorBio ? (
+            <aside className="mt-14 flex max-w-[68ch] flex-col gap-2 border-t border-line pt-8">
+              <h2 className="text-xl font-medium">{post.authorName}</h2>
+              <p className="text-ink-muted">{post.authorBio}</p>
+            </aside>
+          ) : null}
+        </ReadingLayout>
+      </Container>
+
+      {related.length > 0 ? (
+        <Container as="section" className="flex flex-col gap-8 border-t border-line pt-14 pb-24" aria-labelledby="related-heading">
+          <h2 id="related-heading" className="text-3xl font-medium sm:text-4xl">
+            Related posts
+          </h2>
+          <ul className="grid gap-x-6 gap-y-12 sm:grid-cols-2 lg:grid-cols-3">
+            {related.map((p) => (
+              <li key={p.id} className="reveal">
+                <PostCard post={p} />
               </li>
             ))}
           </ul>
-        ) : null}
-        {post.authorName && post.authorBio ? (
-          <aside className="mt-14 flex max-w-[68ch] flex-col gap-2 border-t border-line pt-8">
-            <h2 className="text-xl font-medium">{post.authorName}</h2>
-            <p className="text-ink-muted">{post.authorBio}</p>
-          </aside>
-        ) : null}
-      </Container>
+        </Container>
+      ) : null}
       <JsonLd data={articleJsonLd(post)} />
       <JsonLd data={breadcrumbJsonLd([{ name: "Blog", path: "/blog" }, { name: post.title, path: `/blog/${post.slug}` }])} />
     </>

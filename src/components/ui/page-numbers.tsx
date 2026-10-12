@@ -7,6 +7,8 @@ type Props = {
   pages: number;
   /** The address of a page, with every filter that is applied kept. */
   hrefFor: (page: number) => string;
+  /** Where the row sits. The public site centres it, the admin keeps it to one side. */
+  align?: "start" | "center";
 };
 
 const base = "inline-flex h-11 min-w-11 items-center justify-center rounded-full px-3 font-medium tabular-nums transition-[background-color,transform] duration-150 ease-[var(--ease-out-strong)] active:scale-[0.97]";
@@ -15,10 +17,10 @@ const base = "inline-flex h-11 min-w-11 items-center justify-center rounded-full
  * Previous, numbered pages and next. The current page is marked for screen readers, and every number is a
  * real link, so a page can be opened in a new tab, shared, and found by search engines. Renders nothing for one page.
  */
-export function PageNumbers({ page, pages, hrefFor }: Props) {
+export function PageNumbers({ page, pages, hrefFor, align = "start" }: Props) {
   if (pages <= 1) return null;
   return (
-    <nav aria-label="Pagination" className="flex flex-wrap items-center gap-1">
+    <nav aria-label="Pagination" className={`flex flex-wrap items-center gap-1 ${align === "center" ? "mt-10 justify-center" : ""}`}>
       {page > 1 ? (
         <Link href={hrefFor(page - 1)} rel="prev" aria-label="Previous page" className={`${base} gap-1 hover:bg-sunken sm:pr-4`}>
           <CaretLeft size={18} aria-hidden />

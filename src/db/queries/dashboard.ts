@@ -1,17 +1,17 @@
 import "server-only";
-import { desc, eq, inArray } from "drizzle-orm";
+import { desc, eq, inArray, sql } from "drizzle-orm";
 import type { AnyPgColumn, PgTable } from "drizzle-orm/pg-core";
 import { db, schema } from "@/db";
 import { postStatusCounts } from "@/db/queries/blog";
 import { statusCounts } from "@/db/queries/catalogue";
 import { enquiryStatusCounts } from "@/db/queries/enquiries";
-import { describeActivity, type ActivityText } from "@/lib/activity-text";
+import { activityKind, describeActivity, type ActivityKind, type ActivityText } from "@/lib/activity-text";
 import { supabaseAdmin } from "@/lib/supabase/server";
 
 const s = schema;
 
 export type DashboardEnquiry = { id: string; name: string; type: "contact" | "quote" | "assistant"; message: string | null; createdAt: string };
-export type DashboardActivity = ActivityText & { id: string; who: string | null; mine: boolean; at: string };
+export type DashboardActivity = ActivityText & { id: string; kind: ActivityKind; who: string | null; mine: boolean; at: string };
 
 /** For each kind of record the log can point at: where its readable name lives. */
 const nameSources: Record<string, [PgTable, AnyPgColumn, AnyPgColumn]> = {
@@ -54,13 +54,14 @@ async function emailsFor(userIds: string[]): Promise<Map<string, string>> {
   return out;
 }
 
-export async function recentActivity(limit: number, currentUserId: string): Promise<DashboardActivity[]> {
-  const rows = await db.select().from(s.activityLog).orderBy(desc(s.activityLog.createdAt)).limit(limit);
+/** The most recent changes, newest first. `offset` pages through the whole log. */
+export async function recentActivity(limit: number, currentUserId: string, offset = 0): Promise<DashboardActivity[]> {
+  const rows = await db.select().from(s.activityLog).orderBy(desc(s.activityLog.createdAt)).limit(limit).offset(offset);
   const byEntity = new Map<string, string[]>();
   for (const r of rows) if (r.entityId) byEntity.set(r.entity, [...(byEntity.get(r.entity) ?? []), r.entityId]);
 
   const [names, emails] = await Promise.all([
-    Promise.all([...byEntity].map(async ([entity, ids]) => [entity, await namesFor(entity, ids)] as const)),
+    Promise.all([...byEntity].map(async ([entity, ids]) => [entity, entity === "user" ? await emailsFor(ids) : await namesFor(entity, ids)] as const)),
     emailsFor([...new Set(rows.flatMap((r) => (r.userId && r.userId !== currentUserId ? [r.userId] : [])))]),
   ]);
   const nameMap = new Map(names);
@@ -70,11 +71,17 @@ export async function recentActivity(limit: number, currentUserId: string): Prom
     return {
       id: r.id,
       ...describeActivity(r.action, r.entity, name),
+      kind: activityKind(r.action),
       who: r.userId ? (emails.get(r.userId) ?? null) : null,
       mine: r.userId === currentUserId,
       at: r.createdAt.toISOString(),
     };
   });
+}
+
+export async function activityCount(): Promise<number> {
+  const [{ n } = { n: 0 }] = await db.select({ n: sql<number>`count(*)::int` }).from(s.activityLog);
+  return n;
 }
 
 export async function newestEnquiries(limit: number): Promise<DashboardEnquiry[]> {
@@ -88,6 +95,6 @@ export async function newestEnquiries(limit: number): Promise<DashboardEnquiry[]
 }
 
 export async function getDashboard(currentUserId: string) {
-  const [products, posts, enquiries, newest, activity] = await Promise.all([statusCounts(), postStatusCounts(), enquiryStatusCounts(), newestEnquiries(5), recentActivity(10, currentUserId)]);
-  return { products, posts, enquiries, newest, activity };
+  const [products, posts, enquiries, newest, activity, activityTotal] = await Promise.all([statusCounts(), postStatusCounts(), enquiryStatusCounts(), newestEnquiries(5), recentActivity(7, currentUserId), activityCount()]);
+  return { products, posts, enquiries, newest, activity, activityTotal };
 }

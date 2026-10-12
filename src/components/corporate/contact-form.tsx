@@ -64,9 +64,9 @@ function ContactFormRound({ initialType, productSlug, productName, turnstileSite
     <form action={action} className="flex flex-col gap-6 rounded-container bg-surface p-6 sm:p-10" noValidate>
       {turnstileSiteKey ? <Script src="https://challenges.cloudflare.com/turnstile/v0/api.js" strategy="afterInteractive" /> : null}
 
-      <fieldset className="flex flex-col gap-2">
+      <fieldset className="flex flex-col gap-4">
         <legend className="text-sm font-medium">What is this about?</legend>
-        <div className="flex flex-wrap gap-2">
+        <div className="mt-5 flex flex-wrap gap-3">
           {([["contact", "General enquiry"], ["quote", "Request a quote"]] as const).map(([value, label]) => (
             <label key={value} className={`flex h-11 cursor-pointer items-center rounded-full border px-5 font-medium transition-[background-color,color] duration-150 has-[:focus-visible]:outline-2 has-[:focus-visible]:outline-offset-2 has-[:focus-visible]:outline-action ${type === value ? "border-transparent bg-primary text-on-primary" : "border-line-strong hover:bg-sunken"}`}>
               <input type="radio" name="type" value={value} checked={type === value} onChange={() => setType(value)} className="sr-only" />

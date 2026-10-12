@@ -1,5 +1,5 @@
 import "server-only";
-import { and, asc, desc, eq, inArray, lte, sql } from "drizzle-orm";
+import { and, asc, desc, eq, inArray, lte, ne, sql } from "drizzle-orm";
 import { unstable_cache } from "next/cache";
 import { db, schema } from "@/db";
 import { formatSpecValue } from "@/lib/catalogue/spec-values";
@@ -211,6 +211,20 @@ export const getPublishedPosts = cached(
   "public-posts",
   "blog",
 );
+
+/** A few other published posts, picked at random, never the one being read. */
+export async function getRelatedPosts(excludeId: string, limit = 3): Promise<PostCard[]> {
+  const rows = await db
+    .select({ id: s.posts.id, slug: s.posts.slug, title: s.posts.title, excerpt: s.posts.excerpt, publishedAt: s.posts.publishedAt, categoryName: s.postCategories.name, categorySlug: s.postCategories.slug, authorName: s.authors.name, image: imageCols })
+    .from(s.posts)
+    .leftJoin(s.postCategories, eq(s.postCategories.id, s.posts.categoryId))
+    .leftJoin(s.authors, eq(s.authors.id, s.posts.authorId))
+    .leftJoin(s.media, eq(s.media.id, s.posts.featuredMediaId))
+    .where(and(postIsLive(), ne(s.posts.id, excludeId)))
+    .orderBy(sql`random()`)
+    .limit(limit);
+  return rows.map((r) => ({ ...r, publishedAt: r.publishedAt!.toISOString(), image: r.image?.storagePath ? r.image : null }));
+}
 
 export type PostDetail = PostCard & { body: string; seoTitle: string | null; seoDescription: string | null; ogImage: PublicImage | null; tags: { name: string; slug: string }[]; authorBio: string | null; updatedAt: string };
 

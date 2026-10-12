@@ -1,3 +1,4 @@
+import { requireAdmin } from "@/lib/auth";
 import type { Metadata } from "next";
 import Link from "next/link";
 import { buttonStyles } from "@/components/ui/button";
@@ -12,6 +13,7 @@ export const metadata: Metadata = { title: "Brands" };
 const PAGE_SIZE = 20;
 
 export default async function BrandsPage({ searchParams }: { searchParams: Promise<{ page?: string }> }) {
+  await requireAdmin({ section: "brands" });
   const all = await listBrands();
   const { rows: brands, page, pages } = paginate(all, parsePage((await searchParams).page), PAGE_SIZE);
   const create = (

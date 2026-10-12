@@ -1,6 +1,7 @@
-import Image from "next/image";
 import { Container } from "@/components/corporate/container";
+import { PhotoCarousel, type Slide } from "@/components/corporate/photo-carousel";
 import { team, workProcess } from "@/content/pages";
+import { staffPhotos } from "@/content/team-photos";
 import type { Team, WorkProcess } from "@/lib/site-values";
 
 /**
@@ -9,20 +10,17 @@ import type { Team, WorkProcess } from "@/lib/site-values";
  */
 export function TeamProcess({ members, process }: { members: Team; process: WorkProcess }) {
   const ceo = members[0];
+  // The CEO first, with the name and role from the editable team values, then the staff portraits supplied so far.
+  const slides: Slide[] = [
+    { src: team.ceoPhoto.src, alt: team.ceoPhoto.alt, width: team.ceoPhoto.width, height: team.ceoPhoto.height, caption: ceo?.name, subcaption: ceo?.role },
+    ...staffPhotos.map((p) => ({ src: p.src, alt: p.alt, width: p.width, height: p.height, caption: p.name, subcaption: p.role })),
+  ];
   return (
     <Container as="section" className="py-16 sm:py-24">
       <div className="grid gap-12 lg:grid-cols-[minmax(0,5fr)_minmax(0,7fr)] lg:gap-20">
-        <figure className="reveal flex flex-col gap-4">
-          <div className="relative aspect-[3/4] overflow-hidden rounded-container bg-sunken">
-            <Image src={team.ceoPhoto.src} alt={team.ceoPhoto.alt} fill sizes="(min-width: 1024px) 34rem, 100vw" className="object-cover" />
-          </div>
-          {ceo ? (
-            <figcaption className="flex flex-col">
-              <span className="font-heading text-2xl font-medium">{ceo.name}</span>
-              <span className="text-ink-muted">{ceo.role}</span>
-            </figcaption>
-          ) : null}
-        </figure>
+        <div className="reveal">
+          <PhotoCarousel slides={slides} label="Our team" aspect="aspect-[3/4]" position="top" interval={6500} sizes="(min-width: 1024px) 34rem, 100vw" />
+        </div>
 
         <div className="flex flex-col gap-14">
           <div className="reveal flex flex-col gap-5">

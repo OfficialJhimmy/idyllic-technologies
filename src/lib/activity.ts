@@ -1,7 +1,7 @@
 import "server-only";
 import { db, schema } from "@/db";
 
-type Entity = "product" | "brand" | "category" | "spec_definition" | "media" | "post" | "post_category" | "tag" | "author" | "enquiry" | "faq" | "testimonial" | "client";
+type Entity = "product" | "brand" | "category" | "spec_definition" | "media" | "post" | "post_category" | "tag" | "author" | "enquiry" | "faq" | "testimonial" | "client" | "user";
 
 /** Records who did what for the dashboard's recent activity. Never throws, so logging cannot break a save. */
 export async function logActivity(userId: string, action: string, entity: Entity, entityId: string | null) {

@@ -66,7 +66,7 @@ export default async function BrandPage({ params, searchParams }: Props) {
                 </li>
               ))}
             </ul>
-            <Pagination basePath={`/brand/${slug}`} page={page} pages={pages} params={{ category: data.activeCategory }} />
+            <Pagination align="center" basePath={`/brand/${slug}`} page={page} pages={pages} params={{ category: data.activeCategory }} />
           </>
         ) : (
           <EmptyState title={`No ${data.brand.name} products yet`} body="They will appear here as they are added." action={<Link href="/" className="inline-flex h-12 items-center rounded-full bg-action px-6 font-medium text-on-action">Back to the marketplace</Link>} />

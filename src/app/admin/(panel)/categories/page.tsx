@@ -1,3 +1,4 @@
+import { requireAdmin } from "@/lib/auth";
 import type { Metadata } from "next";
 import Link from "next/link";
 import { PageHeader } from "@/components/ui/page-header";
@@ -6,6 +7,7 @@ import { listCategories } from "@/db/queries/catalogue";
 export const metadata: Metadata = { title: "Categories" };
 
 export default async function CategoriesPage() {
+  await requireAdmin({ section: "categories" });
   const categories = await listCategories();
   return (
     <div className="flex max-w-3xl flex-col gap-8">

@@ -1,5 +1,6 @@
 "use client";
 
+import { CaretDown } from "@phosphor-icons/react";
 import { useId } from "react";
 import { Button } from "@/components/ui/button";
 import type { BrandOption, Facet } from "@/db/queries/shop";
@@ -21,10 +22,14 @@ export function FilterForm({ formId, action, brands, facets, filters, autoSubmit
     <form id={formId} action={action} method="get" onChange={submit} onSubmit={() => onApplied?.()} className="flex flex-col gap-7">
       <label className="flex flex-col gap-2">
         <span className="text-sm font-medium">Sort by</span>
-        <select name="sort" defaultValue={filters.sort} className="h-11 rounded-input border border-line-strong bg-surface px-3 text-base">
-          <option value="newest">Newest</option>
-          <option value="name">Name</option>
-        </select>
+        {/* The browser's own arrow sits hard against the edge, so it is replaced with one that has room. */}
+        <span className="relative block">
+          <select name="sort" defaultValue={filters.sort} className="h-11 w-full appearance-none rounded-input border border-line-strong bg-surface pr-11 pl-4 text-base">
+            <option value="newest">Newest</option>
+            <option value="name">Name</option>
+          </select>
+          <CaretDown size={18} aria-hidden className="pointer-events-none absolute top-1/2 right-4 -translate-y-1/2 text-ink-muted" />
+        </span>
       </label>
 
       {brands.length > 1 ? (

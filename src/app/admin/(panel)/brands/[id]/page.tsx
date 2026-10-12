@@ -1,3 +1,4 @@
+import { requireAdmin } from "@/lib/auth";
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { BrandForm } from "@/components/admin/catalogue/brand-form";
@@ -8,6 +9,7 @@ import { idSchema } from "@/lib/catalogue/schemas";
 export const metadata: Metadata = { title: "Edit brand" };
 
 export default async function EditBrandPage({ params }: { params: Promise<{ id: string }> }) {
+  await requireAdmin({ section: "brands" });
   const parsed = idSchema.safeParse((await params).id);
   if (!parsed.success) notFound();
   const brand = await getBrand(parsed.data);

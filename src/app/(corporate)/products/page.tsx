@@ -15,6 +15,14 @@ import { pageMetadata, shopUrl } from "@/lib/seo";
 export const metadata: Metadata = pageMetadata({ title: productsIntro.title, description: productsIntro.body, path: "/products" });
 
 const PAGE_SIZE = 12;
+
+/** The address for a choice of category and brand. Choosing a selected chip again passes undefined, which clears it. */
+const listHref = (category?: string, brand?: string) => {
+  const q = new URLSearchParams();
+  if (category) q.set("category", category);
+  if (brand) q.set("brand", brand);
+  return q.size ? `/products?${q}` : "/products";
+};
 type SearchParams = { category?: string; brand?: string; page?: string };
 
 export default async function ProductsPage({ searchParams }: { searchParams: Promise<SearchParams> }) {
@@ -37,10 +45,10 @@ export default async function ProductsPage({ searchParams }: { searchParams: Pro
           <div className="flex flex-col gap-4">
             <nav aria-label="Categories">
               <ul className="flex flex-wrap gap-2">
-                <li><Link href="/products" className={chip(!category)} aria-current={!category ? "page" : undefined}>All</Link></li>
+                <li><Link href={listHref(undefined, brand?.slug)} className={chip(!category)} aria-current={!category ? "page" : undefined}>All</Link></li>
                 {categories.map((c) => (
                   <li key={c.id}>
-                    <Link href={`/products?category=${c.slug}${brand ? `&brand=${brand.slug}` : ""}`} className={chip(c.slug === category?.slug)} aria-current={c.slug === category?.slug ? "page" : undefined}>
+                    <Link href={listHref(c.slug === category?.slug ? undefined : c.slug, brand?.slug)} className={chip(c.slug === category?.slug)} aria-pressed={c.slug === category?.slug} aria-current={c.slug === category?.slug ? "page" : undefined}>
                       {c.name}
                     </Link>
                   </li>
@@ -50,10 +58,10 @@ export default async function ProductsPage({ searchParams }: { searchParams: Pro
             {brands.length > 1 ? (
               <nav aria-label="Brands">
                 <ul className="flex flex-wrap gap-2">
-                  <li><Link href={`/products${category ? `?category=${category.slug}` : ""}`} className={chip(!brand)}>All brands</Link></li>
+                  <li><Link href={listHref(category?.slug, undefined)} className={chip(!brand)}>All brands</Link></li>
                   {brands.map((b) => (
                     <li key={b.slug}>
-                      <Link href={`/products?${category ? `category=${category.slug}&` : ""}brand=${b.slug}`} className={chip(b.slug === brand?.slug)} aria-current={b.slug === brand?.slug ? "page" : undefined}>
+                      <Link href={listHref(category?.slug, b.slug === brand?.slug ? undefined : b.slug)} className={chip(b.slug === brand?.slug)} aria-pressed={b.slug === brand?.slug} aria-current={b.slug === brand?.slug ? "page" : undefined}>
                         {b.name}
                       </Link>
                     </li>
@@ -72,7 +80,7 @@ export default async function ProductsPage({ searchParams }: { searchParams: Pro
                   </li>
                 ))}
               </ul>
-              <Pagination basePath="/products" page={page} pages={pages} params={{ category: category?.slug, brand: brand?.slug }} />
+              <Pagination align="center" basePath="/products" page={page} pages={pages} params={{ category: category?.slug, brand: brand?.slug }} />
             </>
           ) : (
             <p className="max-w-[56ch] text-lg text-ink-muted">No products match these choices yet. Try another category or brand, or contact us and we will help you find what you need.</p>

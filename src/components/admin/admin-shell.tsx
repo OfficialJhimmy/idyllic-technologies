@@ -2,9 +2,10 @@ import { signOutAction } from "@/app/admin/(auth)/login/actions";
 import { AdminNav } from "@/components/admin/admin-nav";
 import { Button } from "@/components/ui/button";
 import { ThemeToggle } from "@/components/ui/theme-toggle";
+import { ROLE_LABEL, type Role } from "@/lib/permissions";
 import { Wordmark } from "@/components/ui/wordmark";
 
-type Props = { email: string | undefined; role: "owner" | "editor"; children: React.ReactNode };
+type Props = { email: string | undefined; role: Role; children: React.ReactNode };
 
 /** Frame for every signed-in admin page: sidebar on large screens, top bar and scrolling nav below. */
 export function AdminShell({ email, role, children }: Props) {
@@ -22,11 +23,11 @@ export function AdminShell({ email, role, children }: Props) {
             </form>
           </div>
         </div>
-        <AdminNav />
+        <AdminNav role={role} />
         <div className="mt-auto hidden flex-col gap-3 lg:flex">
           <div className="min-w-0">
             <p className="truncate text-sm font-medium">{email ?? "Signed in"}</p>
-            <p className="text-sm text-ink-muted capitalize">{role}</p>
+            <p className="text-sm text-ink-muted">{ROLE_LABEL[role]}</p>
           </div>
           <ThemeToggle />
           <form action={signOutAction}>

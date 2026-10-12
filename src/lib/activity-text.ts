@@ -11,6 +11,9 @@ const verbs: Record<string, string> = {
   reorder: "Reordered",
   upload: "Uploaded",
   read: "Opened",
+  invite: "Invited",
+  role: "Changed the role of",
+  remove: "Removed",
   replied: "Marked as replied:",
   closed: "Closed",
   new: "Reopened",
@@ -32,7 +35,23 @@ const nouns: Record<string, string> = {
   testimonial: "testimonial",
   client: "client or partner",
   document: "datasheet",
+  user: "team member",
 };
+
+export type ActivityKind = "create" | "update" | "delete" | "publish" | "unpublish" | "upload" | "reorder" | "other";
+
+/** The kind of change, for choosing an icon and colour. */
+export function activityKind(action: string): ActivityKind {
+  const verb = action.split(".")[1] ?? "";
+  if (verb === "create" || verb === "invite") return "create";
+  if (verb === "update" || verb === "role") return "update";
+  if (verb === "delete" || verb === "remove") return "delete";
+  if (verb === "publish" || verb === "restore") return "publish";
+  if (verb === "unpublish" || verb === "archive") return "unpublish";
+  if (verb === "upload") return "upload";
+  if (verb === "reorder") return "reorder";
+  return "other";
+}
 
 export type ActivityText = { verb: string; noun: string; name: string | null };
 

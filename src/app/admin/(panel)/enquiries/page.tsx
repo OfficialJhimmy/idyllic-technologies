@@ -1,3 +1,4 @@
+import { requireAdmin } from "@/lib/auth";
 import type { Metadata } from "next";
 import Link from "next/link";
 import { EnquiryFilters } from "@/components/admin/enquiries/enquiry-filters";
@@ -16,6 +17,7 @@ const PAGE_SIZE = 25;
 type SearchParams = { q?: string; type?: string; status?: string; page?: string };
 
 export default async function EnquiriesPage({ searchParams }: { searchParams: Promise<SearchParams> }) {
+  await requireAdmin({ section: "enquiries" });
   const sp = await searchParams;
   const q = (sp.q ?? "").trim().slice(0, 100);
   const type = enquiryTypes.find((t) => t === sp.type);

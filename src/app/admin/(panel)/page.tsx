@@ -1,5 +1,8 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import { ArrowRight } from "@phosphor-icons/react/dist/ssr";
+import { ActivityTimeline } from "@/components/admin/activity-timeline";
+import { buttonStyles } from "@/components/ui/button";
 import { getDashboard } from "@/db/queries/dashboard";
 import { requireAdmin } from "@/lib/auth";
 import { timeAgo } from "@/lib/activity-text";
@@ -43,7 +46,7 @@ const sum = (c: Counts) => c.draft + c.published + c.archived;
 
 export default async function DashboardPage() {
   const session = await requireAdmin();
-  const { products, posts, enquiries, newest, activity } = await getDashboard(session.userId);
+  const { products, posts, enquiries, newest, activity, activityTotal } = await getDashboard(session.userId);
 
   return (
     <div className="flex max-w-5xl flex-col gap-8">
@@ -93,26 +96,23 @@ export default async function DashboardPage() {
           )}
         </section>
 
-        <section aria-labelledby="recent-activity" className="flex flex-col gap-2 rounded-card bg-surface p-5">
-          <h2 id="recent-activity" className="text-base font-medium">
-            Recent activity
-          </h2>
+        <section aria-labelledby="recent-activity" className="flex flex-col gap-5 rounded-card bg-surface p-5">
+          <div className="flex items-baseline justify-between gap-4">
+            <h2 id="recent-activity" className="text-base font-medium">
+              Recent activity
+            </h2>
+            {activityTotal > 7 ? <span className="text-sm text-ink-muted tabular-nums">Latest 7 of {activityTotal}</span> : null}
+          </div>
           {activity.length === 0 ? (
             <p className="py-4 text-ink-muted">No activity yet. Changes made in the admin are listed here.</p>
           ) : (
-            <ul className="divide-y divide-line">
-              {activity.map((a) => (
-                <li key={a.id} className="flex flex-col gap-0.5 py-3">
-                  <p className="break-words">
-                    {a.verb} {a.noun}
-                    {a.name ? <span className="font-medium"> {a.name}</span> : null}
-                  </p>
-                  <p className="text-sm text-ink-muted">
-                    {a.mine ? "You" : (a.who ?? "A team member")}, {timeAgo(new Date(a.at))}
-                  </p>
-                </li>
-              ))}
-            </ul>
+            <>
+              <ActivityTimeline items={activity} compact />
+              <Link href="/admin/activity" className={buttonStyles({ variant: "secondary" })}>
+                See all activity
+                <ArrowRight size={18} aria-hidden />
+              </Link>
+            </>
           )}
         </section>
       </div>

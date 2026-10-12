@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
-import Image from "next/image";
 import { Container } from "@/components/corporate/container";
 import { CtaBand } from "@/components/corporate/cta-band";
+import { IndustryPhoto } from "@/components/corporate/industry-photo";
 import { PageHero } from "@/components/corporate/page-hero";
 import { industries, industriesIntro } from "@/content/pages";
 import { getSiteContent } from "@/db/queries/public";
@@ -19,7 +19,7 @@ export default async function IndustriesPage() {
           {industries.map((i, index) => (
             <li key={i.id} className={`reveal flex flex-col gap-5 ${index % 2 === 1 ? "md:mt-20" : ""}`}>
               <div className="relative aspect-[4/3] overflow-hidden rounded-container bg-sunken">
-                <Image src={i.image.src} alt={i.image.alt} fill sizes="(min-width: 768px) 38rem, 100vw" className="object-cover" />
+                <IndustryPhoto image={i.image} sizes="(min-width: 768px) 38rem, 100vw" />
               </div>
               <div className="flex flex-col gap-2">
                 <h2 className="text-3xl font-medium sm:text-4xl">{i.title}</h2>

@@ -40,7 +40,7 @@ export default async function SearchPage({ searchParams }: Props) {
               </li>
             ))}
           </ul>
-          {!q ? <Pagination basePath="/search" page={page} pages={pages} /> : null}
+          {!q ? <Pagination align="center" basePath="/search" page={page} pages={pages} /> : null}
         </>
       ) : (
         <EmptyState

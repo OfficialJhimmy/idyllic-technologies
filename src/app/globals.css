@@ -430,6 +430,16 @@
   line-height: 1.75;
   max-width: 68ch;
 }
+/* The blog post page lets the text use the width it is given, beside the reading meter. */
+.prose-public.prose-wide {
+  max-width: none;
+  font-size: 1.1875rem;
+}
+.prose-public img,
+.prose-public figure {
+  max-width: 100%;
+  height: auto;
+}
 .prose-public > * + * {
   margin-top: 1.25rem;
 }

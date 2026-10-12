@@ -1,7 +1,7 @@
 "use client";
 
-import Image from "next/image";
 import { useState } from "react";
+import { IndustryPhoto } from "@/components/corporate/industry-photo";
 import type { Industry } from "@/content/pages";
 
 /**
@@ -36,16 +36,14 @@ export function IndustriesExplorer({ industries }: { industries: readonly Indust
       <div className="flex flex-col gap-6" aria-live="polite">
         <div className="relative aspect-[4/3] overflow-hidden rounded-container bg-sunken">
           {industries.map((industry) => (
-            <Image
+            <div
               key={industry.id}
-              src={industry.image.src}
-              alt={industry.id === active.id ? industry.image.alt : ""}
               aria-hidden={industry.id !== active.id}
-              fill
-              sizes="(min-width: 1024px) 40rem, 100vw"
-              className="object-cover transition-opacity duration-500 ease-[var(--ease-out-strong)]"
+              className="absolute inset-0 transition-opacity duration-500 ease-[var(--ease-out-strong)]"
               style={{ opacity: industry.id === active.id ? 1 : 0 }}
-            />
+            >
+              <IndustryPhoto image={industry.image} sizes="(min-width: 1024px) 40rem, 100vw" showAlt={industry.id === active.id} />
+            </div>
           ))}
         </div>
         <div className="flex flex-col gap-2">

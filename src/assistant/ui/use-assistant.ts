@@ -1,12 +1,13 @@
 "use client";
 
-import { useCallback, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { assistantNextAction } from "@/assistant/actions";
 import { initialState, type AssistantInput, type AssistantState, type Question, type QuestionOption, type Turn } from "@/assistant/engine/types";
+import { STORAGE_KEY, greetingFor, parseStored, serialize } from "@/assistant/ui/conversation-storage";
 import { track } from "@/lib/analytics";
 
 /** One line of the conversation: something the visitor chose, or something the assistant said. */
-export type Entry = { id: number; kind: "user"; text: string } | { id: number; kind: "turn"; turn: Turn };
+export type Entry = { id: number; kind: "greeting"; text: string } | { id: number; kind: "user"; text: string } | { id: number; kind: "turn"; turn: Turn };
 
 type NewEntry = { kind: "user"; text: string } | { kind: "turn"; turn: Turn };
 
@@ -20,13 +21,40 @@ const lastTurn = (entries: Entry[]): Turn | null => {
   return null;
 };
 
+const freshConversation = (opening: Turn): Entry[] => [
+  { id: 0, kind: "greeting", text: greetingFor(new Date().getHours()) },
+  { id: 1, kind: "turn", turn: opening },
+];
+
+/** The saved conversation if there is one (after a refresh), with the greeting renewed for the time of day now. */
+function startingEntries(opening: Turn): Entry[] {
+  if (typeof window === "undefined") return freshConversation(opening);
+  try {
+    const saved = parseStored(window.sessionStorage.getItem(STORAGE_KEY));
+    if (saved) return saved.map((e) => (e.kind === "greeting" ? { ...e, text: greetingFor(new Date().getHours()) } : e)) as Entry[];
+  } catch {
+    // Storage can be blocked. Start fresh.
+  }
+  return freshConversation(opening);
+}
+
 /** Conversation state for the drawer. It only knows the Turn contract, never how the engine decides. */
 export function useAssistant(opening: Turn) {
-  const [entries, setEntries] = useState<Entry[]>([{ id: 0, kind: "turn", turn: opening }]);
+  // The drawer is not part of the server's page, so reading storage here cannot disagree with it.
+  const [entries, setEntries] = useState<Entry[]>(() => startingEntries(opening));
   const [pending, setPending] = useState(false);
   const [failed, setFailed] = useState<Failed | null>(null);
   const busy = useRef(false);
-  const ids = useRef(1);
+  const ids = useRef(Math.max(...entries.map((e) => e.id)) + 1);
+
+  // Keep the conversation for a refresh. Only for this tab, and only what was said.
+  useEffect(() => {
+    try {
+      window.sessionStorage.setItem(STORAGE_KEY, serialize(entries));
+    } catch {
+      // Storage can be blocked. The conversation simply is not kept.
+    }
+  }, [entries]);
 
   const push = useCallback((entry: NewEntry) => setEntries((prev) => [...prev, { ...entry, id: ids.current++ }]), []);
 
@@ -90,7 +118,7 @@ export function useAssistant(opening: Turn) {
     restart() {
       if (busy.current) return;
       setFailed(null);
-      setEntries([{ id: ids.current++, kind: "turn", turn: opening }]);
+      setEntries(freshConversation(opening).map((e) => ({ ...e, id: ids.current++ })) as Entry[]);
     },
   };
 }
