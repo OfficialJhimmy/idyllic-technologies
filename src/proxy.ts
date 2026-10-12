@@ -43,7 +43,8 @@ export async function proxy(request: NextRequest) {
           items.forEach(({ name, value, options }) => response.cookies.set(name, value, options)),
       },
     });
-    await supabase.auth.getUser();
+    // Refreshes the session cookie when it is close to expiring. Checked locally, with no call to the auth service.
+    await supabase.auth.getClaims();
   }
 
   return response;
