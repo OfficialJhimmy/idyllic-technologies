@@ -13,8 +13,8 @@ function client() {
   if (!url) throw new Error("DATABASE_URL is not set");
   // Supabase pooler (transaction mode) does not support prepared statements.
   // Serverless: many copies of the app run at once, so connections must not linger, and each copy takes only 2. Idle ones are closed after
-  // 20 seconds, and a connection that cannot be made fails fast instead of hanging the page.
-  return postgres(serverlessConnectionUrl(url, Boolean(process.env.VERCEL)), { prepare: false, max: Number(process.env.DB_POOL_MAX) || (process.env.VERCEL ? 2 : 3), idle_timeout: 20, connect_timeout: 10 });
+  // 5 seconds on Vercel (20 elsewhere), so a copy of the app that was paused does not wake up holding a connection the pooler has already dropped, and a connection that cannot be made fails fast instead of hanging the page.
+  return postgres(serverlessConnectionUrl(url, Boolean(process.env.VERCEL)), { prepare: false, max: Number(process.env.DB_POOL_MAX) || (process.env.VERCEL ? 2 : 3), idle_timeout: process.env.VERCEL ? 5 : 20, connect_timeout: 10 });
 }
 
 const sql = globalThis.__pg ?? client();

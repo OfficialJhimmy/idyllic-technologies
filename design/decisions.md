@@ -415,3 +415,9 @@ The rule: **numbered pages** where people browse, compare, bookmark or share a p
 - **Admin links no longer prefetch** (all 32 in the admin). In production Next fetched every linked page as it scrolled into view, and each fetch ran the admin layout, which asks Supabase's auth service and the database. Opening the dashboard fired dozens of those, which matches the finding that nearly all of Supabase's daily requests are Auth calls.
 - **One session check per request.** The layout and the page both called `requireAdmin`, so each page did the auth and profile lookups twice. They now share one answer (`React.cache`).
 - **Tried and not possible:** shortening the database's 2 minute statement limit from the app. The pooler ignores the setting, so a stuck query still waits up to 2 minutes before the error page.
+
+## Admin still slow on Vercel (Oct 12, later)
+
+- **Evidence from the Vercel log:** the request entered at Cape Town (cpt1), and the function then failed with `canceling statement due to statement timeout` (code 57014) on `select id, slug, name from product_categories`, a six row table, followed by "Unhandled Rejection" and the function process exiting (status 128). A query that simple cannot take the database's 2 minute limit by itself, and the same query runs in about 150 ms from a laptop with no locks, no blocked sessions and no stuck connections on the database. So the query was sent from Vercel but did not complete there.
+- **Added `/api/health`** (`src/app/api/health/route.ts`): runs the same kinds of queries from inside Vercel and reports the region, how the database address is set up (never the address itself), and timings for connecting, a second query, the real query and Supabase's auth service. It reveals no secrets and is never cached.
+- **Idle connections close after 5 seconds on Vercel** (20 elsewhere). A paused function copy can wake holding a connection the pooler already dropped, and the first query on it can stall.
