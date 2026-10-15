@@ -1,3 +1,4 @@
+import { requireAdmin } from "@/lib/auth";
 import type { Metadata } from "next";
 import { TaxonomyManager } from "@/components/admin/blog/taxonomy-manager";
 import { PageHeader } from "@/components/ui/page-header";
@@ -10,6 +11,8 @@ export const metadata: Metadata = { title: "Blog categories" };
 const PAGE_SIZE = 20;
 
 export default async function BlogCategoriesPage({ searchParams }: { searchParams: Promise<{ page?: string }> }) {
+  // Checked first, so a signed out visitor is sent to sign in before any query is started.
+  await requireAdmin();
   const { rows, page, pages } = paginate(await listPostCategories(), parsePage((await searchParams).page), PAGE_SIZE);
   return (
     <div className="flex flex-col gap-8">

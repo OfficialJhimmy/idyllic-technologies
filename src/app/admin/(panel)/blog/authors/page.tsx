@@ -1,3 +1,4 @@
+import { requireAdmin } from "@/lib/auth";
 import type { Metadata } from "next";
 import Link from "next/link";
 import { buttonStyles } from "@/components/ui/button";
@@ -12,6 +13,8 @@ export const metadata: Metadata = { title: "Blog authors" };
 const PAGE_SIZE = 20;
 
 export default async function AuthorsPage({ searchParams }: { searchParams: Promise<{ page?: string }> }) {
+  // Checked first, so a signed out visitor is sent to sign in before any query is started.
+  await requireAdmin();
   const all = await listAuthors();
   const { rows: authors, page, pages } = paginate(all, parsePage((await searchParams).page), PAGE_SIZE);
   const create = <Link prefetch={false} href="/admin/blog/authors/new" className={buttonStyles()}>New author</Link>;

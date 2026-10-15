@@ -1,3 +1,4 @@
+import { requireAdmin } from "@/lib/auth";
 import type { Metadata } from "next";
 import Link from "next/link";
 import { PostFilters } from "@/components/admin/blog/post-filters";
@@ -18,6 +19,8 @@ const statuses: PublishStatus[] = ["draft", "published", "archived"];
 type SearchParams = { q?: string; status?: string; category?: string; page?: string };
 
 export default async function BlogPage({ searchParams }: { searchParams: Promise<SearchParams> }) {
+  // Checked first, so a signed out visitor is sent to sign in before any query is started.
+  await requireAdmin();
   const sp = await searchParams;
   const q = (sp.q ?? "").trim().slice(0, 100);
   const status = statuses.find((s) => s === sp.status);

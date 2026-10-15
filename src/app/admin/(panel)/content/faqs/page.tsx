@@ -1,3 +1,4 @@
+import { requireAdmin } from "@/lib/auth";
 import type { Metadata } from "next";
 import { FaqManager } from "@/components/admin/content/faq-manager";
 import { PageHeader } from "@/components/ui/page-header";
@@ -6,6 +7,8 @@ import { listFaqsAdmin } from "@/db/queries/content";
 export const metadata: Metadata = { title: "FAQs" };
 
 export default async function FaqsAdminPage() {
+  // Checked first, so a signed out visitor is sent to sign in before any query is started.
+  await requireAdmin();
   const faqs = await listFaqsAdmin();
   return (
     <div className="flex flex-col gap-8">

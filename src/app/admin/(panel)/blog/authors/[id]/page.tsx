@@ -1,3 +1,4 @@
+import { requireAdmin } from "@/lib/auth";
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { AuthorForm } from "@/components/admin/blog/author-form";
@@ -8,6 +9,8 @@ import { idSchema } from "@/lib/catalogue/schemas";
 export const metadata: Metadata = { title: "Edit author" };
 
 export default async function EditAuthorPage({ params }: { params: Promise<{ id: string }> }) {
+  // Checked first, so a signed out visitor is sent to sign in before any query is started.
+  await requireAdmin();
   const parsed = idSchema.safeParse((await params).id);
   if (!parsed.success) notFound();
   const author = await getAuthor(parsed.data);

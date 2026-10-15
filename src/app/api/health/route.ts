@@ -61,7 +61,7 @@ export async function GET() {
     {
       region: process.env.VERCEL_REGION ?? "not on Vercel",
       database: described,
-      poolMax: Number(process.env.DB_POOL_MAX) || (process.env.VERCEL ? 2 : 3),
+      poolMax: Number(process.env.DB_POOL_MAX) || (process.env.VERCEL ? 1 : 3),
       steps: [first, second, real, auth, keys, login, logout],
     },
     { headers: { "Cache-Control": "no-store" } },

@@ -1,3 +1,4 @@
+import { requireAdmin } from "@/lib/auth";
 import type { Metadata } from "next";
 import { TestimonialManager } from "@/components/admin/content/testimonial-manager";
 import { PageHeader } from "@/components/ui/page-header";
@@ -6,6 +7,8 @@ import { listTestimonialsAdmin } from "@/db/queries/content";
 export const metadata: Metadata = { title: "Testimonials" };
 
 export default async function TestimonialsAdminPage() {
+  // Checked first, so a signed out visitor is sent to sign in before any query is started.
+  await requireAdmin();
   const items = await listTestimonialsAdmin();
   return (
     <div className="flex flex-col gap-8">

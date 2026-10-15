@@ -1,3 +1,4 @@
+import { requireAdmin } from "@/lib/auth";
 import type { Metadata } from "next";
 import { MediaLibrary } from "@/components/admin/media/media-library";
 import { Pagination } from "@/components/ui/pagination";
@@ -9,6 +10,8 @@ export const metadata: Metadata = { title: "Media" };
 const PAGE_SIZE = 40;
 
 export default async function MediaPage({ searchParams }: { searchParams: Promise<{ page?: string }> }) {
+  // Checked first, so a signed out visitor is sent to sign in before any query is started.
+  await requireAdmin();
   const { page: pageParam } = await searchParams;
   const page = Math.max(1, Number.parseInt(pageParam ?? "1", 10) || 1);
   const { rows, total } = await listMedia({ page, pageSize: PAGE_SIZE });
