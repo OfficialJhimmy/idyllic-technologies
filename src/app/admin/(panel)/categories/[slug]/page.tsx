@@ -25,7 +25,7 @@ export default async function EditCategoryPage({ params }: { params: Promise<{ s
           </Link>
         }
       />
-      <CategoryForm category={{ id: category.id, name: category.name, slug: category.slug, description: category.description ?? "", image: category.image }} />
+      <CategoryForm category={{ id: category.id, name: category.name, slug: category.slug, description: category.description ?? "", image: category.image, shopImage: category.shopImage }} />
       <SpecTemplateManager categoryId={category.id} categoryName={category.name} specs={specs} valueCounts={valueCounts} />
     </div>
   );

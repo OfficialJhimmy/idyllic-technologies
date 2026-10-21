@@ -9,13 +9,14 @@ import { FormBanner } from "@/components/ui/states";
 import { TextareaField } from "@/components/ui/textarea-field";
 import type { MediaRef } from "@/lib/catalogue/types";
 
-type Props = { category: { id: string; name: string; slug: string; description: string; image: MediaRef | null } };
+type Props = { category: { id: string; name: string; slug: string; description: string; image: MediaRef | null; shopImage: MediaRef | null } };
 
 /** Name and slug are fixed (there are exactly six categories). Description and image can change. */
 export function CategoryForm({ category }: Props) {
   const router = useRouter();
   const [description, setDescription] = useState(category.description);
   const [image, setImage] = useState(category.image);
+  const [shopImage, setShopImage] = useState(category.shopImage);
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [message, setMessage] = useState<{ tone: "error" | "success"; text: string } | null>(null);
   const [pending, startTransition] = useTransition();
@@ -25,7 +26,7 @@ export function CategoryForm({ category }: Props) {
     setErrors({});
     setMessage(null);
     startTransition(async () => {
-      const result = await saveCategoryAction({ id: category.id, description, imageMediaId: image?.id ?? null });
+      const result = await saveCategoryAction({ id: category.id, description, imageMediaId: image?.id ?? null, shopImageMediaId: shopImage?.id ?? null });
       if (!result.ok) {
         setErrors(result.fieldErrors ?? {});
         return setMessage({ tone: "error", text: result.error ?? "Check the highlighted fields" });
@@ -38,7 +39,8 @@ export function CategoryForm({ category }: Props) {
   return (
     <form onSubmit={save} className="flex max-w-xl flex-col gap-6" noValidate>
       <TextareaField id="category-description" label="Description" value={description} maxLength={2000} error={errors.description} onChange={(e) => setDescription(e.target.value)} />
-      <ImageField label="Category image" value={image} onChange={setImage} />
+      <ImageField label="Category image" value={image} onChange={setImage} hint="The cover on the main website." />
+      <ImageField label="Marketplace image (optional)" value={shopImage} onChange={setShopImage} hint="The cover on the marketplace. Leave it empty to use the category image there too." />
       {message ? <FormBanner tone={message.tone}>{message.text}</FormBanner> : null}
       <div>
         <Button type="submit" size="lg" loading={pending}>

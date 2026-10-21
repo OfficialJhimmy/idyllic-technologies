@@ -15,6 +15,13 @@
       "when": 1791361234679,
       "tag": "0001_overrated_ghost_rider",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1792595535285,
+      "tag": "0002_woozy_mockingbird",
+      "breakpoints": true
     }
   ]
 }

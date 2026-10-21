@@ -73,6 +73,7 @@ export const categoryInputSchema = z.object({
   id: z.uuid(),
   description: optionalText(2000),
   imageMediaId: z.uuid().nullable().default(null),
+  shopImageMediaId: z.uuid().nullable().default(null),
 });
 export type CategoryInput = z.infer<typeof categoryInputSchema>;
 

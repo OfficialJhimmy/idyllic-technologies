@@ -1,5 +1,6 @@
 import "server-only";
 import { and, asc, desc, eq, inArray, lte, ne, sql } from "drizzle-orm";
+import { alias } from "drizzle-orm/pg-core";
 import { unstable_cache } from "next/cache";
 import { db, schema } from "@/db";
 import { formatSpecValue } from "@/lib/catalogue/spec-values";
@@ -26,13 +27,23 @@ const imageCols = { storagePath: s.media.storagePath, alt: s.media.alt, width: s
 
 // ---------------------------------------------------------------- catalogue
 
-export type PublicCategory = { id: string; slug: string; name: string; description: string | null; image: PublicImage | null; productCount: number };
+/** `image` is the cover on the main site. `shopImage` is the marketplace's own cover, when one has been set. */
+export type PublicCategory = { id: string; slug: string; name: string; description: string | null; image: PublicImage | null; shopImage: PublicImage | null; productCount: number };
 
 export const getPublicCategories = cached(async (): Promise<PublicCategory[]> => {
+  const shopMedia = alias(s.media, "shop_media");
   const rows = await db
-    .select({ id: s.productCategories.id, slug: s.productCategories.slug, name: s.productCategories.name, description: s.productCategories.description, image: imageCols })
+    .select({
+      id: s.productCategories.id,
+      slug: s.productCategories.slug,
+      name: s.productCategories.name,
+      description: s.productCategories.description,
+      image: imageCols,
+      shopImage: { storagePath: shopMedia.storagePath, alt: shopMedia.alt, width: shopMedia.width, height: shopMedia.height },
+    })
     .from(s.productCategories)
     .leftJoin(s.media, eq(s.media.id, s.productCategories.imageMediaId))
+    .leftJoin(shopMedia, eq(shopMedia.id, s.productCategories.shopImageMediaId))
     .orderBy(asc(s.productCategories.sort));
   const counts = await db
     .select({ id: s.products.categoryId, n: sql<number>`count(*)::int` })
@@ -40,7 +51,7 @@ export const getPublicCategories = cached(async (): Promise<PublicCategory[]> =>
     .where(eq(s.products.status, "published"))
     .groupBy(s.products.categoryId);
   const n = new Map(counts.map((c) => [c.id, c.n]));
-  return rows.map((r) => ({ ...r, image: r.image?.storagePath ? r.image : null, productCount: n.get(r.id) ?? 0 }));
+  return rows.map((r) => ({ ...r, image: r.image?.storagePath ? r.image : null, shopImage: r.shopImage?.storagePath ? r.shopImage : null, productCount: n.get(r.id) ?? 0 }));
 }, "public-categories", "catalogue");
 
 export type ProductCard = { id: string; slug: string; name: string; summary: string | null; brandName: string; categoryName: string; categorySlug: string; image: PublicImage | null };

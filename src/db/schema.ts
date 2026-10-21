@@ -63,6 +63,8 @@ export const productCategories = pgTable("product_categories", {
   slug: text("slug").notNull().unique(),
   name: text("name").notNull(),
   imageMediaId: uuid("image_media_id").references(() => media.id, { onDelete: "set null" }),
+  /** Optional. When set, the marketplace shows this as the category cover instead of the main image. */
+  shopImageMediaId: uuid("shop_image_media_id").references(() => media.id, { onDelete: "set null" }),
   description: text("description"),
   sort: integer("sort").notNull().default(0),
 });

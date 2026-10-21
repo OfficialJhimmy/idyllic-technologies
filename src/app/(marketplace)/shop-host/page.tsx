@@ -35,7 +35,7 @@ export default async function ShopHomePage() {
           {categories.map((c) => (
             <li key={c.id} className="reveal">
               <Link href={`/category/${c.slug}`} className="group relative isolate flex min-h-64 flex-col justify-end overflow-hidden rounded-container p-6 text-white transition-transform duration-200 ease-[var(--ease-out-strong)] active:scale-[0.99]">
-                {c.image ? <MediaImage image={c.image} fill sizes="(min-width: 1024px) 28rem, (min-width: 640px) 45vw, 100vw" className="-z-20 object-cover transition-transform duration-700 ease-[var(--ease-out-strong)] group-hover:scale-[1.05]" /> : <div aria-hidden className="absolute inset-0 -z-20 bg-footer" />}
+                {c.shopImage ?? c.image ? <MediaImage image={(c.shopImage ?? c.image)!} fill sizes="(min-width: 1024px) 28rem, (min-width: 640px) 45vw, 100vw" className="-z-20 object-cover transition-transform duration-700 ease-[var(--ease-out-strong)] group-hover:scale-[1.05]" /> : <div aria-hidden className="absolute inset-0 -z-20 bg-footer" />}
                 <div aria-hidden className="absolute inset-0 -z-10 bg-gradient-to-t from-[#0b1426]/85 via-[#0b1426]/30 to-transparent" />
                 <h3 className="text-2xl font-medium sm:text-3xl">{c.name}</h3>
                 <p className="text-white/85">{c.productCount > 0 ? `${c.productCount} ${c.productCount === 1 ? "product" : "products"}` : "Products coming soon"}</p>

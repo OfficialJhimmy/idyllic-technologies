@@ -462,3 +462,7 @@ The supplied "Who We Are" story supersedes any copy that contradicts it. What wa
 - **Admin pages check the sign in before any query** (16 pages), so a signed out visit is redirected at once instead of waiting on queries it did not need.
 - **Keep-alive:** Vercel calls `/api/cron/keepalive` at 05:00 and 17:00 UTC (`vercel.json`). It reads one row from the database and one from the Supabase API, changes nothing, and the free plan's one week pause never starts. If `CRON_SECRET` is set in Vercel, the address refuses anything else (tested: 401 without it, 200 with it). On the Hobby plan a cron job may run only once a day each, which is why there are two jobs.
 - **Supabase pool size:** with the Session pooler, raise Project Settings, Database, Connection pooling, Pool size from 15 to about 30, since the site barely uses Supabase's own API.
+
+## Full River Battery covers (Oct 21)
+
+The home page bento and the marketplace tile now use different covers for the same category. Categories got an optional `shop_image_media_id` (migration 0002). The marketplace uses it when set and falls back to the normal category image, so the other five categories are unchanged. It is editable in the admin under Categories, "Marketplace image (optional)". Both new covers were composed from the supplied product shots (white background removed, centred on the same deep blue backdrop as the UPS and Inverters covers).

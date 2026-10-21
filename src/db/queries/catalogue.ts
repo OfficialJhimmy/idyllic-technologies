@@ -47,8 +47,8 @@ export async function categoryOptions(): Promise<CategoryOption[]> {
 export async function getCategoryBySlug(slug: string) {
   const [row] = await db.select().from(s.productCategories).where(eq(s.productCategories.slug, slug)).limit(1);
   if (!row) return null;
-  const image = row.imageMediaId ? await getMediaRef(row.imageMediaId) : null;
-  return { ...row, image };
+  const [image, shopImage] = await Promise.all([row.imageMediaId ? getMediaRef(row.imageMediaId) : null, row.shopImageMediaId ? getMediaRef(row.shopImageMediaId) : null]);
+  return { ...row, image, shopImage };
 }
 
 function toSpecView(r: typeof s.specDefinitions.$inferSelect): SpecDefinitionView {
@@ -301,7 +301,7 @@ export async function mediaUsageCount(id: string): Promise<number> {
     db.select({ n: count }).from(s.productImages).where(eq(s.productImages.mediaId, id)),
     db.select({ n: count }).from(s.products).where(eq(s.products.ogImageMediaId, id)),
     db.select({ n: count }).from(s.brands).where(eq(s.brands.logoMediaId, id)),
-    db.select({ n: count }).from(s.productCategories).where(eq(s.productCategories.imageMediaId, id)),
+    db.select({ n: count }).from(s.productCategories).where(or(eq(s.productCategories.imageMediaId, id), eq(s.productCategories.shopImageMediaId, id))),
     db.select({ n: count }).from(s.posts).where(or(eq(s.posts.featuredMediaId, id), eq(s.posts.ogImageMediaId, id))),
     db.select({ n: count }).from(s.authors).where(eq(s.authors.avatarMediaId, id)),
     db.select({ n: count }).from(s.testimonials).where(eq(s.testimonials.avatarMediaId, id)),

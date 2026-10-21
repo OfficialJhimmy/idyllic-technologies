@@ -9,11 +9,11 @@ const s = schema;
 
 type Fail = { ok: false; error?: string; fieldErrors?: Record<string, string> };
 
-/** Categories are fixed at six. Only the description and image can change. */
+/** Categories are fixed at six. Only the description and the two images can change. */
 export async function saveCategory(input: CategoryInput, actorId: string): Promise<{ ok: true } | Fail> {
   const updated = await db
     .update(s.productCategories)
-    .set({ description: input.description, imageMediaId: input.imageMediaId })
+    .set({ description: input.description, imageMediaId: input.imageMediaId, shopImageMediaId: input.shopImageMediaId })
     .where(eq(s.productCategories.id, input.id))
     .returning({ id: s.productCategories.id });
   if (!updated.length) return { ok: false, error: "This category does not exist" };
